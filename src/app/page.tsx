@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { loadCaseStudies } from '@/lib/content';
+import { TodoText } from '@/components/mdx';
 
 export default function Home() {
   const featured = loadCaseStudies().filter((s) => s.featured);
@@ -7,18 +8,19 @@ export default function Home() {
     <>
       <section className="masthead">
         <h1>Dani Calvo</h1>
-        <p className="label">Platform engineering · Issue 01 · July 2026</p>
+        <p className="label">Platform engineering · July 2026</p>
       </section>
 
       <section className="abstract" aria-label="Abstract">
         <span className="label">Abstract</span>
         <p>
           I build SaaS platforms end to end: spec-first, test-first, with AI as engineering
-          leverage rather than a crutch. Three case studies follow. Each states its role scope
-          precisely, backs its claims with artifacts, and ends with what I would do differently.
+          leverage. Lately that means RetryFi, a payment-recovery service built alone from
+          architecture to launch, and staking platforms where a wrong number in the UI costs
+          someone real money.
         </p>
         <p className="index-terms">
-          <b>Index terms</b> · Stripe · dunning · web3 platforms · Next.js · test-driven
+          <b>Index terms</b>: Stripe Connect, dunning, web3 platforms, Next.js, test-driven
           development
         </p>
       </section>
@@ -29,8 +31,9 @@ export default function Home() {
           {featured.map((s) => (
             <li key={s.slug}>
               <Link prefetch={false} href={`/work/${s.slug}/`}>{s.title}</Link>
-              <span className="leader" aria-hidden />
-              <span className="label">{s.period}</span>
+              <span className="label period">
+                <TodoText text={s.period} />
+              </span>
             </li>
           ))}
         </ol>

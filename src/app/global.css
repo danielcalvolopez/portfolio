@@ -154,10 +154,10 @@ p {
   margin-top: 0.5rem;
 }
 .contents li {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1.2rem 1fr auto;
+  column-gap: 0.6rem;
   align-items: baseline;
-  gap: 0.3rem 0.6rem;
   padding: 0.6rem 0;
   border-bottom: 1px solid var(--rule);
 }
@@ -169,7 +169,10 @@ p {
   font-size: 0.647rem;
   letter-spacing: 0.09em;
   color: var(--ink-2);
-  min-width: 1.1rem;
+}
+.contents .period {
+  text-align: right;
+  white-space: nowrap;
 }
 .contents a {
   color: var(--ink);
@@ -181,11 +184,16 @@ p {
   text-decoration: underline;
   text-decoration-thickness: 1px;
 }
-.leader {
-  flex: 1 1 auto;
-  min-width: 2rem;
-  border-bottom: 1px dotted var(--rule);
-  transform: translateY(-0.25em);
+@media (max-width: 540px) {
+  .contents li {
+    grid-template-columns: 1.2rem 1fr;
+  }
+  .contents .period {
+    grid-column: 2;
+    text-align: left;
+    white-space: normal;
+    margin-top: 0.15rem;
+  }
 }
 .contents-appendix {
   padding: 0.6rem 0;
@@ -200,6 +208,11 @@ p {
 .note {
   margin: 1.8rem 0;
   padding-top: 0.6rem;
+}
+/* The device belongs to its section heading; close the seam. */
+h2 + .warning,
+h3 + .warning {
+  margin-top: 0.9rem;
 }
 .warning {
   border-top: 2px solid var(--warn);
@@ -217,13 +230,20 @@ p {
   margin-bottom: 0.4rem;
 }
 
+/* Unfinished copy: annotation, not decoration; must never read as a link. */
 .todo {
-  color: var(--spot);
-  border-bottom: 1px dotted var(--spot);
+  color: var(--ink-2);
+  font-style: italic;
 }
 
 figure {
   margin: 1.6rem 0 2rem;
+}
+/* Figures may break out of the prose measure on wide screens (DESIGN.md). */
+@media (min-width: 1100px) {
+  article figure {
+    margin-inline: -5rem;
+  }
 }
 figure svg {
   width: 100%;
@@ -326,5 +346,28 @@ tr:last-child td {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* -- print: the reprint, fulfilled ---------------------------------------- */
+@media print {
+  body {
+    background: #fff;
+    padding: 0;
+  }
+  .skip,
+  .running-head nav {
+    display: none;
+  }
+  a,
+  .todo {
+    color: inherit;
+    text-decoration: none;
+  }
+  .warning > .label {
+    color: var(--warn);
+  }
+  @page {
+    margin: 2cm;
   }
 }

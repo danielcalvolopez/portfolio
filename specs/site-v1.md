@@ -128,7 +128,9 @@ E2E (Playwright, `tests/e2e/`, against `next build` output served statically):
 }
 ```
 
-Throttling is DevTools Fast 3G equivalent, so the LCP < 1000 ms assertion is SPEC's hard requirement, not a lab-flattered number. Byte budgets: ≤ 256 KB total, ≤ 120 KB script (Next runtime ceiling), ≤ 90 KB fonts (4 subset files). A second desktop-preset run asserts the same category scores. Known risk, stated honestly: the script budget is the tightest one; if the Next runtime pushes past it, the fallback decision (strip-runtime postbuild vs. accept a higher budget) comes back to you rather than being made silently.
+Throttling is DevTools Fast 3G equivalent, so the LCP < 1000 ms assertion is SPEC's hard requirement, not a lab-flattered number. Byte budgets: ≤ 256 KB total, ≤ 120 KB script (Next runtime ceiling), ≤ 100 KB fonts (5 latin-subset files including the italic). A second desktop-preset run asserts the same category scores. Known risk, stated honestly: the script budget is the tightest one; if the Next runtime pushes past it, the fallback decision (strip-runtime postbuild vs. accept a higher budget) comes back to you rather than being made silently.
+
+> **Resolved 2026-07-22.** Measured: the Next 16 runtime ships 643 KB of JS on a site with zero client components. SPEC's "no client JS beyond what interaction strictly requires" decides the fallback: `scripts/stamp.mjs` now strips all script tags at export. The site is authored in Next, served as pure HTML/CSS/fonts. Reverting is deleting `stripRuntime` from the stamp script.
 
 ## 7. Repo layout
 

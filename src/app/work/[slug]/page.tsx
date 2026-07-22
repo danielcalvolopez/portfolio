@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { loadCaseStudies, loadCaseStudy } from '@/lib/content';
-import { mdxComponents } from '@/components/mdx';
+import { mdxComponents, TodoText } from '@/components/mdx';
 
 export const dynamicParams = false;
 
@@ -16,7 +16,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const study = loadCaseStudy(slug);
-  return { title: study.title, description: study.summary };
+  return {
+    title: study.title,
+    description: study.summary,
+    openGraph: { images: [`/og/work-${slug}.png`] },
+  };
 }
 
 export default async function CaseStudyPage({
@@ -31,7 +35,7 @@ export default async function CaseStudyPage({
       <header className="masthead">
         <h1>{study.title}</h1>
         <p className="label">
-          Role: {study.role} · {study.period}
+          <TodoText text={`Role: ${study.role} · ${study.period}`} />
         </p>
       </header>
 
@@ -39,14 +43,14 @@ export default async function CaseStudyPage({
         <span className="label">Abstract</span>
         <p>{study.abstract}</p>
         <p className="index-terms">
-          <b>Index terms</b> · {study.indexTerms.join(' · ')}
+          <b>Index terms</b>: {study.indexTerms.join(', ')}
         </p>
       </section>
 
       <MDXRemote source={study.body} components={mdxComponents} />
 
       <p className="stack-strip label">
-        Stack: {study.stack.join(' · ')}
+        <TodoText text={`Stack: ${study.stack.join(', ')}`} />
         <span aria-hidden> · </span>
         {study.links.map((l, i) => (
           <span key={l.url}>

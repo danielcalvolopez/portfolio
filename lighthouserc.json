@@ -1,0 +1,39 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./out",
+      "url": [
+        "/",
+        "/work/",
+        "/work/retryfi/",
+        "/work/alkimi-labs/",
+        "/work/credilabs/",
+        "/process/",
+        "/about/"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "throttlingMethod": "devtools",
+        "throttling": {
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 1 }],
+        "categories:accessibility": ["error", { "minScore": 1 }],
+        "categories:best-practices": ["error", { "minScore": 1 }],
+        "categories:seo": ["error", { "minScore": 1 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0 }],
+        "largest-contentful-paint": ["error", { "maxNumericValue": 1000 }],
+        "total-byte-weight": ["error", { "maxNumericValue": 262144 }],
+        "resource-summary:script:size": ["error", { "maxNumericValue": 122880 }],
+        "resource-summary:font:size": ["error", { "maxNumericValue": 102400 }]
+      }
+    }
+  }
+}

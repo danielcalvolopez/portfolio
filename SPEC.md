@@ -58,7 +58,7 @@ Audience: hiring managers and founders evaluating senior frontend/product engine
 - Next.js (App Router), static export or fully static-rendered pages on Vercel. No client JS beyond what interaction strictly requires.
 - Content as MDX with a typed frontmatter schema (title, slug, role, period, stack, summary, featured).
 - Lighthouse 100/100/100/100 on every page, desktop and mobile. This is a hard requirement, and it gets stated on the site (small footer line: build hash + Lighthouse score + page weight).
-- LCP < 1.0s on Fast 3G for the home page. Fonts self-hosted, subset, `font-display: swap`, zero CLS.
+- LCP < 1.0s on Fast 3G for the home page. Fonts self-hosted, subset, `font-display: optional` (measured 2026-07-22: `swap` puts the webfont repaint at 1.5s and becomes the LCP, failing the line above; `optional` keeps the size-adjusted fallback on slow first visits and guarantees zero CLS), zero CLS.
 - OG images generated per page (reuse the existing OG-image skill/pipeline).
 - Accessible: keyboard navigable, visible focus states, `prefers-reduced-motion` respected, semantic HTML, AA contrast minimum.
 - Analytics: none, or a single privacy-friendly pixel. Nothing that costs performance.

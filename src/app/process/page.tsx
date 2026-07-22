@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'How I build',
   description: 'Spec-driven development, TDD, and AI as engineering leverage.',
+  openGraph: { images: ['/og/process.png'] },
 };
 
 export default function ProcessPage() {
@@ -28,15 +29,15 @@ export default function ProcessPage() {
         On this site that means the content schema, the confidentiality rules, and even the
         copy register (no em-dashes, no exclamation marks) are enforced by the unit suite, and
         every route ships only after smoke, accessibility, and visual-regression checks pass.
-        The Lighthouse budget is a CI gate, not a hope.
+        When the Lighthouse budget fails, the deploy fails.
       </p>
 
       <h2>AI as leverage</h2>
       <p>
         I work with Claude Code inside that discipline: the spec constrains the model, the
         tests judge it, and subagent review passes critique the output against the design
-        system before anything merges. The model types faster than I do. It does not decide
-        what is true, what ships, or what a claim is worth.
+        system before anything merges. The model types faster than I do. What ships is still
+        my call.
       </p>
 
       <h2>A worked example</h2>

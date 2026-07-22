@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'About',
   description: 'Background, stack, and what I am looking for.',
+  openGraph: { images: ['/og/about.png'] },
 };
 
 export default function AboutPage() {
@@ -31,7 +32,7 @@ export default function AboutPage() {
         <span className="todo">[TODO: Dani — one honest paragraph]</span>
       </p>
 
-      <h2>Elsewhere</h2>
+      <h2>Correspondence</h2>
       <ul className="plain-list">
         <li>
           <a href="https://x.com/danicalvo89">x.com/danicalvo89</a>

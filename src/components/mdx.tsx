@@ -1,8 +1,8 @@
 import React from 'react';
 
-/* Renders "[TODO: Dani — ...]" markers visibly in spot ink so nothing
-   placeholder can ship silently (site-v1.md §4). */
-function TodoText({ text }: { text: string }) {
+/* Renders "[TODO: Dani — ...]" markers visibly (secondary ink, italic, never
+   link-styled) so nothing placeholder can ship silently (site-v1.md §4). */
+export function TodoText({ text }: { text: string }) {
   const parts = text.split(/(\[TODO:[^\]]*\])/g);
   return (
     <>
