@@ -52,7 +52,7 @@ export function Fig({
   caption,
   children,
 }: {
-  n: number;
+  n: number | string;
   caption: string;
   children?: React.ReactNode;
 }) {
@@ -72,7 +72,7 @@ export function Data({
   caption,
   children,
 }: {
-  n: number;
+  n: number | string;
   caption: string;
   children?: React.ReactNode;
 }) {

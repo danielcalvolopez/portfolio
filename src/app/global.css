@@ -236,6 +236,15 @@ h3 + .warning {
   font-style: italic;
 }
 
+/* Identifiers in prose: the Archivo data voice, never browser Courier
+   (DESIGN.md: no mono anywhere). */
+code {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.88em;
+  letter-spacing: 0.01em;
+}
+
 figure {
   margin: 1.6rem 0 2rem;
 }
