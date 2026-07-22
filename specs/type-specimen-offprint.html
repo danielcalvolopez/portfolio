@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offprint · type specimen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&family=Archivo:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2F1EC;
+    --ink:   #1B1915;
+    --ink-2: #6A665B;
+    --spot:  #0057A8;
+    --rule:  #D6D2C6;
+    --warn:  #B01E1E;
+
+    /* type scale, ratio ~1.22 */
+    --step--1: 0.8235rem;  /* 14px  caption */
+    --step-0:  1rem;       /* 17px  body    */
+    --step-1:  1.2353rem;  /* 21px  h3      */
+    --step-2:  1.4706rem;  /* 25px  h2      */
+    --step-3:  1.8235rem;  /* 31px  h1      */
+    --step-4:  2.2353rem;  /* 38px  masthead, home only */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 17px; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Charis SIL", Charter, "Bitstream Charter", Georgia, serif;
+    font-size: var(--step-0);
+    line-height: 1.55;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+  ::selection { background: var(--spot); color: var(--paper); }
+  main { max-width: 42rem; margin: 0 auto; }
+
+  .label {
+    font-family: "Archivo", sans-serif;
+    font-weight: 600;
+    font-size: 0.647rem;         /* 11px */
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  a { color: var(--spot); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+
+  /* running head */
+  .running-head {
+    display: flex; justify-content: space-between; gap: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 3px solid var(--ink);
+    margin-bottom: 2.2rem;
+  }
+  .running-head .label { color: var(--ink); }
+
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
+  h1 { font-size: var(--step-3); line-height: 1.15; margin: 0 0 0.6rem; }
+  h2 { font-size: var(--step-2); line-height: 1.2;  margin: 2.4rem 0 0.7rem; }
+  h3 { font-size: var(--step-1); line-height: 1.25; margin: 1.8rem 0 0.5rem; }
+  p  { margin: 0 0 1rem; }
+  .dek { color: var(--ink-2); margin-bottom: 2rem; }
+
+  /* scale table */
+  .scale { border-top: 1px solid var(--rule); margin-bottom: 1rem; }
+  .scale-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.2rem; padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
+  .scale-row .label { flex: 0 0 9.5rem; }
+  .scale-row > span:last-child { min-width: 0; }
+  .s4 { font-size: var(--step-4); font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
+  .s3 { font-size: var(--step-3); font-weight: 700; line-height: 1.15; }
+  .s2 { font-size: var(--step-2); font-weight: 700; line-height: 1.2; }
+  .s1 { font-size: var(--step-1); font-weight: 700; line-height: 1.25; }
+  .s0 { font-size: var(--step-0); }
+  .s-1 { font-size: var(--step--1); color: var(--ink-2); }
+
+  /* abstract block */
+  .abstract {
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 0.9rem 0 1rem;
+    margin: 1.6rem 0 2rem;
+  }
+  .abstract .label { display: block; margin-bottom: 0.45rem; }
+  .abstract p { font-size: 0.9412rem; /* 16px */ margin-bottom: 0.8rem; }
+  .index-terms { font-family: "Archivo", sans-serif; font-weight: 500; font-size: 0.7059rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+  .index-terms b { font-weight: 600; color: var(--ink); }
+
+  /* figure */
+  figure { margin: 1.6rem 0 2rem; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: var(--step--1); color: var(--ink-2); margin-top: 0.55rem; line-height: 1.45; }
+  figcaption .label { color: var(--ink); margin-right: 0.5em; }
+
+  /* table */
+  table { width: 100%; border-collapse: collapse; margin: 1.6rem 0 0.5rem; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+  th { text-align: left; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--ink); }
+  td { padding: 0.45rem 0.75rem 0.45rem 0; border-bottom: 1px solid var(--rule); font-feature-settings: "tnum"; }
+  tr:last-child td { border-bottom: none; }
+
+  /* warning + note grammar */
+  .warning, .note { margin: 1.8rem 0; padding-top: 0.6rem; }
+  .warning { border-top: 2px solid var(--warn); }
+  .warning .label { color: var(--warn); display: block; margin-bottom: 0.4rem; }
+  .note { border-top: 2px solid var(--ink-2); }
+  .note .label { display: block; margin-bottom: 0.4rem; }
+
+  .todo { color: var(--spot); border-bottom: 1px dotted var(--spot); }
+
+  footer {
+    max-width: 42rem; margin: 3rem auto 0;
+    border-top: 3px solid var(--ink);
+    padding-top: 0.5rem;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="running-head">
+    <span class="label">D. Calvo · Portfolio</span>
+    <span class="label">Type specimen · Offprint · Jul 2026</span>
+  </div>
+
+  <h1>Offprint: the type specimen</h1>
+  <p class="dek">Two typefaces, six tokens, no display face. If the case studies read well here, the site follows. Set in <a href="#">Charis SIL</a> with Archivo labels; <em>italic keeps its slope honest at text sizes</em>, and links take the spot ink.</p>
+
+  <h2>Scale</h2>
+  <div class="scale">
+    <div class="scale-row"><span class="label">Step 4 · 38/42 · home only</span><span class="s4">Failed payments, recovered.</span></div>
+    <div class="scale-row"><span class="label">Step 3 · 31/36 · h1</span><span class="s3">RetryFi: recovery end to end</span></div>
+    <div class="scale-row"><span class="label">Step 2 · 25/30 · h2</span><span class="s2">Architecture and decisions</span></div>
+    <div class="scale-row"><span class="label">Step 1 · 21/27 · h3</span><span class="s1">Why server-driven dunning</span></div>
+    <div class="scale-row"><span class="label">Step 0 · 17/26 · body</span><span class="s0">Retry schedules live in Postgres as data, not code.</span></div>
+    <div class="scale-row"><span class="label">Step −1 · 14/20 · caption</span><span class="s-1">Fig. 3 · State transitions in the dunning engine, first 30 days.</span></div>
+  </div>
+
+  <h2>Case-study front matter</h2>
+  <div class="abstract">
+    <span class="label">Abstract</span>
+    <p>RetryFi is a failed-payment recovery service for Stripe businesses. I built it alone: architecture, dunning engine, dashboard, OAuth production verification, and launch. This case study covers the design decisions, the numbers behind them, and what I would change.</p>
+    <p class="index-terms"><b>Index terms</b> · Stripe Connect · dunning · Next.js · Supabase · test-driven development</p>
+  </div>
+
+  <h2>Body, with a real excerpt</h2>
+  <h3>Context</h3>
+  <p>RetryFi exists because involuntary churn is boring and expensive. When a card fails, most SaaS businesses send one badly timed email and give up. The revenue is recoverable, but only if retries are scheduled around the reasons cards actually decline. I wanted the whole problem: product, architecture, infrastructure, and go-to-market, with no one else to blame.</p>
+  <h3>Why server-driven dunning</h3>
+  <p>The dunning engine is server-driven by design. Retry schedules live in Postgres as data, not code, so a schedule change is a migration I can test rather than a deploy I have to fear. Stripe webhooks land in an idempotent queue (Fig. 1), and every state transition is written twice: once for the machine, once for a timeline a support human can read. In its first month the engine recovered <span class="todo">[TODO: Dani — real number]</span> of failed invoices.</p>
+
+  <figure>
+    <svg viewBox="0 0 680 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Payment failure pipeline diagram">
+      <g fill="none" stroke="#0057A8" stroke-width="1.5">
+        <rect x="4"   y="26" width="150" height="44"/>
+        <rect x="196" y="26" width="156" height="44"/>
+        <rect x="394" y="26" width="130" height="44"/>
+        <rect x="566" y="26" width="110" height="44"/>
+        <path d="M154 48h42m-8 -5 8 5-8 5"/>
+        <path d="M352 48h42m-8 -5 8 5-8 5"/>
+        <path d="M524 48h42m-8 -5 8 5-8 5"/>
+      </g>
+      <g fill="#1B1915" font-family="Archivo, sans-serif" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle">
+        <text x="79"  y="51">STRIPE WEBHOOKS</text>
+        <text x="274" y="51">IDEMPOTENT QUEUE</text>
+        <text x="459" y="51">RETRY ENGINE</text>
+        <text x="621" y="51">RECOVERED</text>
+      </g>
+    </svg>
+    <figcaption><span class="label">Fig. 1</span>Payment-failure pipeline. Linework prints in the spot ink; type stays black. Diagrams are static SVG, always numbered.</figcaption>
+  </figure>
+
+  <h2>Data</h2>
+  <table>
+    <thead>
+      <tr><th class="label">Metric</th><th class="label">Value</th><th class="label">Source</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>LCP, home, Fast 3G</td><td>0.9 s</td><td>Lighthouse CI</td></tr>
+      <tr><td>Page weight, home</td><td>41 KB</td><td>build log</td></tr>
+      <tr><td>Recovery rate, month 1</td><td><span class="todo">[TODO: Dani]</span></td><td>Stripe dashboard</td></tr>
+    </tbody>
+  </table>
+  <figcaption><span class="label">Table 1</span>Quality gates as shipped values, not aspirations.</figcaption>
+
+  <h2>The document grammar</h2>
+  <div class="note">
+    <span class="label">Note</span>
+    <p>Notes carry context in the secondary ink. They share their grammar with warnings, so the page teaches you to read it once.</p>
+  </div>
+  <div class="warning">
+    <span class="label">Warning · What I'd do differently</span>
+    <p>I shipped the first dunning schedule from intuition instead of decline-code data. It worked, but I could not say why for three weeks, and a schedule I cannot explain is a schedule I cannot defend. The data model now leads; my hunches follow.</p>
+  </div>
+</main>
+
+<footer>
+  <span class="label">a7bb228 · Lighthouse 100 · 41 KB</span>
+  <span class="label">Specimen uses hosted fonts; production self-hosts subset woff2</span>
+</footer>
+</body>
+</html>

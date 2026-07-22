@@ -2,11 +2,34 @@
 
 This file encodes taste decisions. Follow it exactly. Where it leaves an axis free, do NOT fill the gap with your statistical default — propose options and wait.
 
-## Direction (to be locked after the divergence exercise)
+## Direction (locked 2026-07-22)
 
-Working thesis: **"engineering datasheet × warm editorial"** — the precision and density of a well-set technical document, with the warmth and readability of a good engineering blog. Confident, quiet, information-dense. A site that a platform engineer would design for themselves.
+**Aesthetic: "Offprint"** — the site as a reprint from a 1970s corporate engineering journal (Hewlett-Packard Journal / Bell System Technical Journal lineage). Dense, warm, typeset rather than designed. One device spliced in from flight-operations documentation (see WARNING below).
 
-> NOTE TO CLAUDE: before any code, run the divergence exercise in PROMPT.md step 1. This thesis is a starting hypothesis, not the final direction. The final direction gets written back into this file, replacing this note.
+**Typefaces (exactly two, deliberately no utility mono):**
+
+- **Charis SIL** (OFL; the SIL-maintained descendant of Bitstream Charter, the 1987 laser-printer face of technical memos) carries everything: body at 17px, and headings set bold and tight in the text face, as period journals did. Self-hosted, subset.
+- **Archivo** (OFL) appears only as small uppercase labels: running heads, index terms, figure/table labels, table headers, the footer line. Never at display sizes.
+- No mono anywhere, including the build-hash footer. A monospace "dev accent" is the median move on engineer portfolios; the journal register is stronger without it.
+
+**Tokens (6, defined once as CSS variables):**
+
+```
+--paper: #F2F1EC  /* press-paper gray-white, calibrated away from cream */
+--ink:   #1B1915  /* warm black */
+--ink-2: #6A665B  /* secondary ink: captions, metadata, NOTE blocks */
+--spot:  #0057A8  /* spot ink: links AND all figure/diagram linework */
+--rule:  #D6D2C6  /* rules, borders */
+--warn:  #B01E1E  /* semantic only: the WARNING device, nowhere else */
+```
+
+`--spot` is the ONE accent, used like the second ink in two-color offset printing: every SVG diagram stroke, every link, one system. `--warn` is not an accent; it appears exactly once per case study.
+
+**Signature element: journal front matter.** Every case study opens with an **Abstract + Index Terms** block, and the home page is set as a journal cover/contents page (masthead, abstract, contents list with dot leaders). Figure and table numbering (Fig. 1, Table 2) follows from the genre and is used consistently.
+
+**Spliced device (from the Quick Reference direction):** every "What I'd do differently" section is set as a **WARNING block**: Archivo caps label, `--warn` top rule, body text in normal ink. The only red on the site marks the honest paragraph. NOTE blocks (context asides) share the same grammar in `--ink-2`. There is no CAUTION tier.
+
+**Why this fits a platform engineer's portfolio:** the journal reprint is the genre engineers historically used to document systems they had actually built and shipped, so a case study inherits the credibility of the form instead of arguing for it. Its abstract-first, figure-numbered structure rewards exactly the 30-second scan SPEC.md names as the success criterion. And the craft lives entirely in typesetting discipline (measure, leading, running heads, numbered figures), which is the hardest quality for a template or a model to fake and the easiest for a discerning reader to feel.
 
 ## Hard prohibitions (first-order slop tells)
 
@@ -25,7 +48,7 @@ After producing any design plan or page, ask: "which of these choices would anot
 ## Typography
 
 - Exactly two typefaces + optional utility mono for data/captions.
-- Display face: characterful, used with restraint (headings, the signature element). Candidate territory: a good grotesque with real personality or a text serif with sharp details. Propose 3 concrete pairings with specimens rendered as HTML before choosing. Self-hosted, subset.
+- LOCKED (see Direction): no separate display face. Headings are set in the text face (Charis SIL bold, tight); Archivo appears only as small uppercase labels. Self-hosted, subset.
 - Body: highly readable at 16–18px, comfortable measure (60–75ch), generous leading. Type scale defined as CSS variables, ~1.2–1.25 ratio, few steps.
 - Type does the visual heavy lifting. If the site is memorable, it should be memorable for the typesetting and density, not effects.
 
