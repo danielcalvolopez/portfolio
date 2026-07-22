@@ -1,0 +1,21 @@
+/* DESIGN.md tokens — defined once, used everywhere. */
+:root {
+  --paper: #f2f1ec;
+  --ink: #1b1915;
+  --ink-2: #6a665b;
+  --spot: #0057a8;
+  --rule: #d6d2c6;
+  --warn: #b01e1e;
+
+  /* type scale, ratio ~1.22, 17px base */
+  --step--1: 0.8235rem;
+  --step-0: 1rem;
+  --step-1: 1.2353rem;
+  --step-2: 1.4706rem;
+  --step-3: 1.8235rem;
+  --step-4: 2.2353rem;
+
+  --serif: var(--font-charis), Charter, 'Bitstream Charter', Georgia, serif;
+  --sans: var(--font-archivo), 'Archivo', sans-serif;
+  --measure: 42rem;
+}

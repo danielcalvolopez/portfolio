@@ -1,0 +1,50 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { loadCaseStudies, loadSecondary } from '@/lib/content';
+
+export const metadata: Metadata = {
+  title: 'Work',
+  description: 'Case studies: RetryFi, Alkimi Labs, CrediLabs, and secondary work.',
+};
+
+export default function WorkPage() {
+  const studies = loadCaseStudies();
+  const secondary = loadSecondary();
+  return (
+    <>
+      <section className="masthead">
+        <h1>Work</h1>
+        <p className="label">Case studies, in order of prominence</p>
+      </section>
+
+      <section aria-label="Case studies" data-testid="contents">
+        <ol className="contents">
+          {studies.map((s) => (
+            <li key={s.slug}>
+              <div className="contents-main">
+                <Link prefetch={false} href={`/work/${s.slug}/`}>{s.title}</Link>
+                <p className="contents-summary">{s.summary}</p>
+              </div>
+              <span className="leader" aria-hidden />
+              <span className="label">{s.period}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section aria-label="Secondary work">
+        <h2>Secondary</h2>
+        <ul className="secondary">
+          {secondary.map((e) => (
+            <li key={e.title}>
+              <p>
+                <b>{e.title}</b> <span className="label">{e.role}</span>
+              </p>
+              <p className="secondary-line">{e.line}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
+  );
+}

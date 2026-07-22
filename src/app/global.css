@@ -1,0 +1,330 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 106.25%; /* 17px */
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--step-0);
+  line-height: 1.55;
+}
+
+::selection {
+  background: var(--spot);
+  color: var(--paper);
+}
+
+.shell {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+/* -- labels: the Archivo voice, never at display sizes ------------------- */
+.label {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.647rem; /* 11px */
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* -- links --------------------------------------------------------------- */
+a {
+  color: var(--spot);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+a:focus-visible {
+  outline: 2px solid var(--spot);
+  outline-offset: 2px;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+}
+.skip:focus {
+  position: static;
+  display: inline-block;
+}
+
+/* -- headings ------------------------------------------------------------ */
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+h1 {
+  font-size: var(--step-3);
+  line-height: 1.15;
+}
+h2 {
+  font-size: var(--step-2);
+  line-height: 1.2;
+  margin: 2.4rem 0 0.7rem;
+}
+h3 {
+  font-size: var(--step-1);
+  line-height: 1.25;
+  margin: 1.8rem 0 0.5rem;
+}
+p {
+  margin-bottom: 1rem;
+}
+
+/* -- running head -------------------------------------------------------- */
+.running-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.4rem;
+  border-bottom: 3px solid var(--ink);
+}
+.running-head a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.running-head a:hover,
+.running-head a[aria-current='page'] {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+.running-head .label {
+  color: var(--ink);
+}
+
+/* -- home: masthead, abstract, contents ---------------------------------- */
+.masthead {
+  margin: 2.4rem 0 1.6rem;
+}
+.masthead h1 {
+  font-size: var(--step-4);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+.masthead .label {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.abstract {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.9rem 0 0.2rem;
+  margin: 0 0 2rem;
+}
+.abstract > .label {
+  display: block;
+  margin-bottom: 0.45rem;
+}
+.abstract p {
+  font-size: 0.9412rem; /* 16px */
+}
+.index-terms {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.7059rem; /* 12px */
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.index-terms b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.contents {
+  list-style: none;
+  counter-reset: item;
+  margin-top: 0.5rem;
+}
+.contents li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.6rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.contents li::before {
+  counter-increment: item;
+  content: counter(item);
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.647rem;
+  letter-spacing: 0.09em;
+  color: var(--ink-2);
+  min-width: 1.1rem;
+}
+.contents a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+.contents a:hover {
+  color: var(--spot);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+.leader {
+  flex: 1 1 auto;
+  min-width: 2rem;
+  border-bottom: 1px dotted var(--rule);
+  transform: translateY(-0.25em);
+}
+.contents-appendix {
+  padding: 0.6rem 0;
+  margin: 0;
+}
+.contents-appendix .label {
+  margin-right: 0.6rem;
+}
+
+/* -- case studies: document grammar, figures, data ----------------------- */
+.warning,
+.note {
+  margin: 1.8rem 0;
+  padding-top: 0.6rem;
+}
+.warning {
+  border-top: 2px solid var(--warn);
+}
+.warning > .label {
+  color: var(--warn);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.note {
+  border-top: 2px solid var(--ink-2);
+}
+.note > .label {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.todo {
+  color: var(--spot);
+  border-bottom: 1px dotted var(--spot);
+}
+
+figure {
+  margin: 1.6rem 0 2rem;
+}
+figure svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+figcaption {
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  margin-top: 0.55rem;
+  line-height: 1.45;
+}
+figcaption .label {
+  color: var(--ink);
+  margin-right: 0.5em;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+th {
+  text-align: left;
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.647rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+td {
+  padding: 0.45rem 0.75rem 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-feature-settings: 'tnum';
+}
+tr:last-child td {
+  border-bottom: none;
+}
+
+.stack-strip {
+  margin-top: 2.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* -- /work: richer contents rows, secondary list -------------------------- */
+.contents-main {
+  min-width: min(10rem, 100%);
+  flex: 0 1 auto;
+}
+.contents-summary {
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  margin: 0.15rem 0 0;
+}
+.secondary {
+  list-style: none;
+  margin-top: 0.5rem;
+}
+.secondary li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.secondary p {
+  margin: 0;
+}
+.secondary-line {
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+.plain-list {
+  list-style: none;
+}
+.plain-list li {
+  padding: 0.25rem 0;
+}
+
+/* -- footer line --------------------------------------------------------- */
+.footer-line {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  border-top: 3px solid var(--ink);
+  padding-top: 0.5rem;
+}
+
+/* -- motion: nothing moves ----------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

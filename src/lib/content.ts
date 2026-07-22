@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { z } from 'zod';
+import { secondary } from '../../content/secondary';
 
 const WORK_DIR = path.join(process.cwd(), 'content', 'work');
 
@@ -20,6 +21,19 @@ export const CaseStudySchema = z.object({
 });
 
 export type CaseStudy = z.infer<typeof CaseStudySchema> & { body: string };
+
+export const SecondaryEntrySchema = z.object({
+  title: z.string().min(1),
+  role: z.string().min(1),
+  period: z.string().min(1),
+  line: z.string().min(1).max(160),
+});
+
+export type SecondaryEntry = z.infer<typeof SecondaryEntrySchema>;
+
+export function loadSecondary(): SecondaryEntry[] {
+  return z.array(SecondaryEntrySchema).parse(secondary);
+}
 
 export function loadCaseStudy(slug: string): CaseStudy {
   const file = path.join(WORK_DIR, `${slug}.mdx`);
