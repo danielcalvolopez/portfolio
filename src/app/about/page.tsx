@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { seoMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'About',
   description: 'Background, stack, and what I am looking for.',
-  openGraph: { images: ['/og/about.png'] },
+  ...seoMeta('/about/'),
 };
 
 export default function AboutPage() {

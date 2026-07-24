@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { loadCaseStudies, loadCaseStudy } from '@/lib/content';
 import { mdxComponents, TodoText } from '@/components/mdx';
+import { seoMeta, caseStudyJsonLd, jsonLdScript } from '@/lib/seo';
 
 export const dynamicParams = false;
 
@@ -20,7 +21,8 @@ export async function generateMetadata({
   return {
     title: study.title,
     description: study.summary,
-    openGraph: { images: [`/og/work-${slug}.png`] },
+    keywords: study.indexTerms,
+    ...seoMeta(`/work/${slug}/`, 'article'),
   };
 }
 
@@ -33,6 +35,10 @@ export default async function CaseStudyPage({
   const study = loadCaseStudy(slug);
   return (
     <article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(caseStudyJsonLd(study)) }}
+      />
       <header className="masthead">
         <h1>{study.title}</h1>
         <p className="label">

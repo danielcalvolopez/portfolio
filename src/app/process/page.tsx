@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { seoMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'How I build',
   description: 'Spec-driven development, TDD, and AI as engineering leverage.',
-  openGraph: { images: ['/og/process.png'] },
+  ...seoMeta('/process/'),
 };
 
 export default function ProcessPage() {

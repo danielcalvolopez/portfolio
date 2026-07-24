@@ -4,7 +4,8 @@ import "./tokens.css";
 import "./global.css";
 import { RunningHead } from "@/components/RunningHead";
 import { FooterLine } from "@/components/FooterLine";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { siteGraph, jsonLdScript } from "@/lib/seo";
 
 const charis = localFont({
   src: [
@@ -54,8 +55,8 @@ export const metadata: Metadata = {
     template: "%s · Dani Calvo",
   },
   description:
-    "Frontend engineer at Alkimi, pioneering a new way to run programmatic advertising. I build platforms end to end: spec-first, test-first, with AI as leverage.",
-  openGraph: { images: ["/og/home.png"], siteName: "Dani Calvo · Portfolio" },
+    "Front-end engineer at Alkimi, pioneering a new way to run programmatic advertising. I build platforms end to end: spec-first, test-first, with AI as leverage.",
+  openGraph: { images: ["/og/home.png"], siteName: SITE_NAME },
   twitter: { card: "summary_large_image" },
 };
 
@@ -67,6 +68,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${charis.variable} ${archivo.variable}`}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdScript(siteGraph()) }}
+        />
         <a className="skip label" href="#content">
           Skip to content
         </a>

@@ -8,7 +8,10 @@ import { fileURLToPath } from 'node:url';
 
 export function stripRuntime(html) {
   return html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '')
+    // JSON-LD is data for crawlers, not client runtime; it stays. Decide on
+    // the type attribute: flight chunks mention ld+json inside their payload.
+    .replace(/<script\b([^>]*)>[\s\S]*?<\/script>/g, (tag, attrs) =>
+      /type="application\/ld\+json"/.test(attrs) ? tag : '')
     .replace(/<link[^>]+as="script"[^>]*>/g, '')
     .replace(/<link rel="preconnect" href="\/"[^>]*>/g, '');
 }

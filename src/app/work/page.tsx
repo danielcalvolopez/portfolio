@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { loadCaseStudies, loadSecondary } from '@/lib/content';
 import { TodoText } from '@/components/mdx';
+import { seoMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Work',
   description: 'Case studies: RetryFi, Alkimi Labs, CrediLabs, and secondary work.',
-  openGraph: { images: ['/og/work.png'] },
+  ...seoMeta('/work/'),
 };
 
 export default function WorkPage() {

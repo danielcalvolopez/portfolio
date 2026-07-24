@@ -24,6 +24,7 @@ Parent documents: [SPEC.md](../SPEC.md) (product), [DESIGN.md](../DESIGN.md) (ta
 | `/process` | spec-driven + TDD + AI workflow, one worked example; links to this repo's real `/specs/*.md` | the site demonstrating its own method |
 | `/about` | background incl. music production, stack, looking-for; GitHub / X @danicalvo89 / LinkedIn / mailto | short |
 | `/sitemap.xml`, `/robots.txt` | Next metadata routes (`src/app/sitemap.ts`, `robots.ts`) | driven by `publicRoutes()` |
+| `/llms.txt`, `/llms-full.txt` | static text routes (`src/app/llms.txt/route.ts`, `llms-full.txt/route.ts`) | LLM-facing Markdown mirror, built from the same content loaders as the pages |
 | 404 | styled in-system | "This page was not recovered." |
 
 OG images: generated at build (`scripts/og.mjs`, satori + resvg) into `public/og/<route>.png`, 1200×630, Offprint-styled (paper, ink, spot rule). Referenced from each page's metadata.
@@ -88,6 +89,8 @@ Unit (Vitest, `tests/unit/`):
 | U6 | ownership accuracy (SPEC) | credilabs.mdx: role string equals the agreed frontend-owner wording; body contains no "designed the UI" claims outside retryfi.mdx; credilabs body is past-tense spot-checked (no "currently", "ongoing") |
 | U7 | copy register (DESIGN) | body copy contains no em-dashes (outside `[TODO: Dani — …]` markers) and no exclamation marks; no banned register phrases |
 | U8 | document grammar (DESIGN/SPEC) | every case study body contains exactly one `<Warning>`; every `<Fig>`/`<Data>` numbered sequentially per page |
+| U9 | SEO layer (SPEC) | every route: one self-referencing canonical, per-page og url/type; JSON-LD parses in the export (WebSite + Person site-wide, TechArticle per case study); ld+json survives the runtime strip |
+| U10 | LLM mirror (SPEC) | `/llms.txt` index and `/llms-full.txt` full text derive from the content loaders; MDX grammar rewritten as plain Markdown; exported artifacts match the builders byte-for-byte |
 
 E2E (Playwright, `tests/e2e/`, against `next build` output served statically):
 
@@ -101,6 +104,8 @@ E2E (Playwright, `tests/e2e/`, against `next build` output served statically):
 | E6 | keyboard (SPEC) | tab order reaches all links on home; skip-to-content first |
 
 > Amended 2026-07-24, plan vs. shipped suite: U5 ships as a URL allowlist plus internal-marker scan over content **and** the built HTML; the one project that must never be named cannot be tested for by name (the test itself would contain it), so that specific rule remains a review gate. U6 additionally pins the CrediLabs role wording and past tense. U1b (secondary entries) was added. E4 covers every route, not just home. E3 visual baselines are per-platform (`-win32` suffixes); CI runs everything except E3 until Linux baselines are generated.
+
+> Amended 2026-07-24, SEO layer (U9/U10): every page now carries a self-referencing canonical, per-page OpenGraph url/type (`article` on case studies), and schema.org JSON-LD (`WebSite` + `Person` from the layout, `TechArticle` per case study, `src/lib/seo.ts`); `/llms.txt` and `/llms-full.txt` mirror the site as Markdown for AI crawlers (`src/lib/llms.ts`). One trap worth recording: `stripRuntime` must decide by the script's `type` attribute, not its text. The RSC flight payload serializes the JSON-LD element's props, so a content check keeps a `self.__next_f.push` chunk whose bootstrap was stripped; the resulting TypeError is invisible to the console-error smoke check (it surfaces as a page error) and was caught by the Lighthouse best-practices gate.
 
 ## 6. Lighthouse budgets (`lighthouserc.json`, CI-blocking before deploy)
 
@@ -145,9 +150,9 @@ Throttling is DevTools Fast 3G equivalent, so the LCP < 1000 ms assertion is SPE
 content/work/*.mdx          three case studies
 content/secondary.ts        SecondaryEntry[]
 public/figs/*.svg           case-study diagrams (static SVG, spot ink)
-src/app/                    routes (RSC only), sitemap.ts, robots.ts, icon.svg
+src/app/                    routes (RSC only), sitemap.ts, robots.ts, llms(-full).txt routes, icon.svg
 src/components/             RunningHead, FooterLine, mdx.tsx (Fig, Data, Warning, Note, TodoText, p)
-src/lib/                    content.ts (schemas + loaders), routes.ts, site.ts
+src/lib/                    content.ts (schemas + loaders), routes.ts, site.ts, seo.ts (canonical + JSON-LD), llms.ts
 scripts/og.mjs              build-time OG images (satori + resvg)
 scripts/stamp.mjs           postbuild: strip runtime, inline CSS, stamp weight
 tests/unit/  tests/e2e/

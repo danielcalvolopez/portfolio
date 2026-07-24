@@ -1,6 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { loadCaseStudies } from "@/lib/content";
 import { TodoText } from "@/components/mdx";
+import { seoMeta } from "@/lib/seo";
+
+export const metadata: Metadata = { ...seoMeta("/") };
 
 export default function Home() {
   const featured = loadCaseStudies().filter((s) => s.featured);
@@ -15,7 +19,7 @@ export default function Home() {
         <span className="label">Abstract</span>
         <p>
           I build platforms end to end: spec-first, test-first, with AI as
-          engineering leverage. I&rsquo;m a frontend engineer at{" "}
+          engineering leverage. I&rsquo;m a front-end engineer at{" "}
           <Link
             href="https://alkimi.org"
             target="_blank"
@@ -23,14 +27,14 @@ export default function Home() {
           >
             Alkimi
           </Link>
-          , where
-          we&rsquo;re pioneering a new way to run programmatic advertising and
-          building the industry standards to carry it. On my own time I shipped
-          RetryFi, a payment-recovery SaaS, alone from architecture to launch.
+          , where we&rsquo;re pioneering a new way to run programmatic
+          advertising and building the industry standards to carry it. On my own
+          time I shipped RetryFi, a payment-recovery SaaS, alone from
+          architecture to launch.
         </p>
         <p className="index-terms">
           <b>Index terms</b>: agentic engineering, web3 platforms, SaaS,
-          Next.js, spec-driven development
+          Next.js, test-driven development
         </p>
       </section>
 
