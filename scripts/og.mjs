@@ -23,7 +23,7 @@ const studies = fs
 const clip = (s, n) => (s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s);
 
 const pages = [
-  { name: 'home', title: 'Dani Calvo', sub: 'Software engineer · spec-first, test-first' },
+  { name: 'home', title: 'Dani Calvo', sub: 'Frontend engineer at Alkimi · spec-first, test-first' },
   { name: 'work', title: 'Work', sub: 'Case studies, in order of prominence' },
   ...studies.map((s) => ({
     name: `work-${s.slug}`,

@@ -14,14 +14,15 @@ export default function Home() {
       <section className="abstract" aria-label="Abstract">
         <span className="label">Abstract</span>
         <p>
-          I build SaaS platforms end to end: spec-first, test-first, with AI as
-          engineering leverage. Lately that means RetryFi, a payment-recovery
-          service built alone from architecture to launch, and staking platforms
-          where a wrong number in the UI costs someone real money.
+          I build platforms end to end: spec-first, test-first, with AI as
+          engineering leverage. I&rsquo;m a frontend engineer at Alkimi, where
+          we&rsquo;re pioneering a new way to run programmatic advertising and
+          building the industry standards to carry it. On my own time I shipped
+          RetryFi, a payment-recovery SaaS, alone from architecture to launch.
         </p>
         <p className="index-terms">
-          <b>Index terms</b>: Stripe Connect, dunning, web3 platforms, Next.js,
-          test-driven development
+          <b>Index terms</b>: agentic engineering, web3 platforms, SaaS,
+          Next.js, spec-driven development
         </p>
       </section>
 

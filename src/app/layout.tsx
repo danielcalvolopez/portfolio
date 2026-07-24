@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     template: "%s · Dani Calvo",
   },
   description:
-    "I build SaaS platforms end to end: spec-first, test-first, with AI as engineering leverage.",
+    "Frontend engineer at Alkimi, pioneering a new way to run programmatic advertising. I build platforms end to end: spec-first, test-first, with AI as leverage.",
   openGraph: { images: ["/og/home.png"], siteName: "Dani Calvo · Portfolio" },
   twitter: { card: "summary_large_image" },
 };
