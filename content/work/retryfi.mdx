@@ -6,7 +6,8 @@ period: "2026 — present"
 stack: [Next.js, Supabase, Inngest, Stripe Connect, Resend, Vercel]
 summary: "Solo-built Stripe failed-payment recovery SaaS: idea, architecture, production, and launch."
 abstract: "RetryFi is a failed-payment recovery service for Stripe businesses. I built it alone: architecture, dunning engine, dashboard, OAuth production verification, and launch. This case study covers the design decisions, the numbers behind them, and what I would change."
-indexTerms: [Stripe Connect, dunning, Inngest, Supabase, test-driven development]
+indexTerms:
+  [Stripe Connect, dunning, Inngest, Supabase, test-driven development]
 links:
   - { label: retryfi.com, url: "https://retryfi.com" }
 featured: true
@@ -33,48 +34,108 @@ Three more constraints shaped the design. Retry timers span days and must surviv
 
 **Hardcoded schedules, classified declines.** Soft declines earn four retries at +4h, +72h, +96h, and +168h; hard declines (stolen card, expired card, fraud) skip retries and go straight to email; unknown decline codes get the benefit of the doubt and count as soft. The schedule lives in one constants file, not in per-merchant config. A settings surface would demo well, but no merchant has yet needed one, and constants are testable at a glance.
 
-<Fig n="1" caption="The recovery pipeline. Hard declines bypass the retry ladder; every box writes an auditable action row. Linework prints in the spot ink.">
-  <svg viewBox="0 0 690 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Recovery pipeline diagram">
+<Fig
+  n="1"
+  caption="The recovery pipeline. Hard declines bypass the retry ladder; every box writes an auditable action row. Linework prints in the spot ink."
+>
+  <svg
+    viewBox="0 0 690 160"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="Recovery pipeline diagram"
+  >
     <g fill="none" stroke="#0057A8" stroke-width="1.5">
-      <rect x="4" y="64" width="118" height="42"/>
-      <rect x="152" y="64" width="102" height="42"/>
-      <rect x="284" y="64" width="110" height="42"/>
-      <rect x="424" y="64" width="116" height="42"/>
-      <rect x="570" y="64" width="116" height="42"/>
-      <path d="M122 85h30m-8 -5 8 5-8 5"/>
-      <path d="M254 85h30m-8 -5 8 5-8 5"/>
-      <path d="M394 85h30m-8 -5 8 5-8 5"/>
-      <path d="M540 85h30m-8 -5 8 5-8 5"/>
-      <path d="M203 64v-34h279v26m-5 -8 5 8 5-8"/>
+      <rect x="4" y="64" width="118" height="42" />
+      <rect x="152" y="64" width="102" height="42" />
+      <rect x="284" y="64" width="110" height="42" />
+      <rect x="424" y="64" width="116" height="42" />
+      <rect x="570" y="64" width="116" height="42" />
+      <path d="M122 85h30m-8 -5 8 5-8 5" />
+      <path d="M254 85h30m-8 -5 8 5-8 5" />
+      <path d="M394 85h30m-8 -5 8 5-8 5" />
+      <path d="M540 85h30m-8 -5 8 5-8 5" />
+      <path d="M203 64v-34h279v26m-5 -8 5 8 5-8" />
     </g>
-    <g fill="#1B1915" font-family="Archivo, sans-serif" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle">
-      <text x="63" y="89">INVOICE FAILS</text>
-      <text x="203" y="89">CLASSIFY</text>
-      <text x="339" y="89">RETRY ×4</text>
-      <text x="482" y="89">DUNNING ×4</text>
-      <text x="628" y="83">RECOVERED</text>
-      <text x="628" y="97">OR LOST</text>
-      <text x="342" y="24">HARD DECLINE</text>
+    <g
+      fill="#1B1915"
+      font-family="Archivo, sans-serif"
+      font-size="10"
+      font-weight="600"
+      letter-spacing="0.5"
+      text-anchor="middle"
+    >
+      <text x="63" y="89">
+        INVOICE FAILS
+      </text>
+      <text x="203" y="89">
+        CLASSIFY
+      </text>
+      <text x="339" y="89">
+        RETRY ×4
+      </text>
+      <text x="482" y="89">
+        DUNNING ×4
+      </text>
+      <text x="628" y="83">
+        RECOVERED
+      </text>
+      <text x="628" y="97">
+        OR LOST
+      </text>
+      <text x="342" y="24">
+        HARD DECLINE
+      </text>
     </g>
-    <g fill="#6A665B" font-family="Archivo, sans-serif" font-size="8.5" letter-spacing="0.4" text-anchor="middle">
-      <text x="339" y="124">+4H +72H +96H +168H</text>
-      <text x="482" y="124">+0H +72H +168H +288H</text>
+    <g
+      fill="#6A665B"
+      font-family="Archivo, sans-serif"
+      font-size="8.5"
+      letter-spacing="0.4"
+      text-anchor="middle"
+    >
+      <text x="339" y="124">
+        +4H +72H +96H +168H
+      </text>
+      <text x="482" y="124">
+        +0H +72H +168H +288H
+      </text>
     </g>
   </svg>
 </Fig>
 
 **A circuit breaker before anyone asked for one.** Retries halt per merchant at 10 attempts in 60 minutes with an 80% failure rate, and globally at 50 attempts in 15 minutes at 50%, with a 30-minute cooldown and a five-probe half-open recovery whose accounting runs in an atomic Postgres function. This is complexity no incident had yet demanded. I built it anyway, because a retry storm spends the merchant's customer goodwill and Stripe standing, not mine.
 
-<Data n="1" caption="Guardrails as shipped constants, from the codebase, not aspirations.">
+<Data
+  n="1"
+  caption="Guardrails as shipped constants, from the codebase, not aspirations."
+>
   <thead>
-    <tr><th>Guardrail</th><th>Value</th></tr>
+    <tr>
+      <th>Guardrail</th>
+      <th>Value</th>
+    </tr>
   </thead>
   <tbody>
-    <tr><td>Per-merchant breaker</td><td>10 attempts / 60 min at 80% failure</td></tr>
-    <tr><td>Global breaker</td><td>50 attempts / 15 min at 50% failure</td></tr>
-    <tr><td>Email frequency cap</td><td>one per recipient per 48 h</td></tr>
-    <tr><td>Marked lost</td><td>72 h after the final email</td></tr>
-    <tr><td>Historical scan</td><td>90 days back, 200 invoices per scan</td></tr>
+    <tr>
+      <td>Per-merchant breaker</td>
+      <td>10 attempts / 60 min at 80% failure</td>
+    </tr>
+    <tr>
+      <td>Global breaker</td>
+      <td>50 attempts / 15 min at 50% failure</td>
+    </tr>
+    <tr>
+      <td>Email frequency cap</td>
+      <td>one per recipient per 48 h</td>
+    </tr>
+    <tr>
+      <td>Marked lost</td>
+      <td>72 h after the final email</td>
+    </tr>
+    <tr>
+      <td>Historical scan</td>
+      <td>90 days back, 200 invoices per scan</td>
+    </tr>
   </tbody>
 </Data>
 
@@ -89,8 +150,6 @@ The repo carries 71 test files, including suites that assert on raw migration SQ
 A `DUNNING_TEST_MODE` flag compresses every multi-day delay to seconds so the end-to-end scripts can watch a whole recovery in under a minute. The production boot refuses to start if the flag is set.
 
 </Note>
-
-[TODO: Dani — production metrics: recovery rate, revenue recovered, connected accounts, launch results]
 
 ## What I'd do differently
 

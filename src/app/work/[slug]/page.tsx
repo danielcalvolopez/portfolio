@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { loadCaseStudies, loadCaseStudy } from '@/lib/content';
 import { mdxComponents, TodoText } from '@/components/mdx';
@@ -55,7 +56,9 @@ export default async function CaseStudyPage({
         {study.links.map((l, i) => (
           <span key={l.url}>
             {i > 0 && ' · '}
-            <a href={l.url}>{l.label}</a>
+            <Link href={l.url} target="_blank" rel="noopener noreferrer">
+              {l.label}
+            </Link>
           </span>
         ))}
       </p>

@@ -2,7 +2,7 @@
 title: "Live staking at Alkimi Labs, where mistakes cost money"
 slug: alkimi-labs
 role: "Frontend engineer — ongoing collaboration"
-period: "2024 — present"
+period: "2023 — present"
 stack: [Next.js, TypeScript, React Query, Sui, wagmi/viem]
 summary: "A live staking platform where real funds move: on-chain state in the UI, reliability as the feature."
 abstract: "Alkimi Labs is the live staking platform for the ALKIMI token on Sui: users stake into a pool, claim rewards proved by Merkle proofs, and manage on-chain positions. I work on it as a frontend engineer in heavy, ongoing collaboration with the team, most deeply on the staking transaction layer, the enrollment surface, and the account migration flow. This case study covers what correctness means in a UI where a wrong number is someone's money."
@@ -34,30 +34,67 @@ Precision is the second constraint. ALKIMI carries nine decimals, so any float a
 
 **Floats never touch money.** Base units live as BigInt and are formatted to strings by hand; transfer amounts pass through a decimal library that rounds down, always down, to nine places; the input field refuses anything past the ninth decimal before validation even runs. On the claim path, every Merkle proof element is checked to be exactly 32 bytes before serialization, so a malformed proof fails in the client instead of on chain.
 
-<Fig n="1" caption="The claim path. The interface answers first; the indexer confirms eight seconds later. Linework prints in the spot ink.">
-  <svg viewBox="0 0 690 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reward claim flow diagram">
+<Fig
+  n="1"
+  caption="The claim path. The interface answers first; the indexer confirms eight seconds later. Linework prints in the spot ink."
+>
+  <svg
+    viewBox="0 0 690 150"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="Reward claim flow diagram"
+  >
     <g fill="none" stroke="#0057A8" stroke-width="1.5">
-      <rect x="4" y="54" width="118" height="42"/>
-      <rect x="152" y="54" width="104" height="42"/>
-      <rect x="284" y="54" width="110" height="42"/>
-      <rect x="424" y="54" width="116" height="42"/>
-      <rect x="570" y="54" width="116" height="42"/>
-      <path d="M122 75h30m-8 -5 8 5-8 5"/>
-      <path d="M254 75h30m-8 -5 8 5-8 5"/>
-      <path d="M394 75h30m-8 -5 8 5-8 5"/>
-      <path d="M540 75h30m-8 -5 8 5-8 5"/>
+      <rect x="4" y="54" width="118" height="42" />
+      <rect x="152" y="54" width="104" height="42" />
+      <rect x="284" y="54" width="110" height="42" />
+      <rect x="424" y="54" width="116" height="42" />
+      <rect x="570" y="54" width="116" height="42" />
+      <path d="M122 75h30m-8 -5 8 5-8 5" />
+      <path d="M254 75h30m-8 -5 8 5-8 5" />
+      <path d="M394 75h30m-8 -5 8 5-8 5" />
+      <path d="M540 75h30m-8 -5 8 5-8 5" />
     </g>
-    <g fill="#1B1915" font-family="Archivo, sans-serif" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle">
-      <text x="63" y="79">CLAIM</text>
-      <text x="204" y="79">PROOF CHECK</text>
-      <text x="339" y="79">WALLET SIGNS</text>
-      <text x="482" y="79">OPTIMISTIC UI</text>
-      <text x="628" y="79">RECONCILE</text>
+    <g
+      fill="#1B1915"
+      font-family="Archivo, sans-serif"
+      font-size="10"
+      font-weight="600"
+      letter-spacing="0.5"
+      text-anchor="middle"
+    >
+      <text x="63" y="79">
+        CLAIM
+      </text>
+      <text x="204" y="79">
+        PROOF CHECK
+      </text>
+      <text x="339" y="79">
+        WALLET SIGNS
+      </text>
+      <text x="482" y="79">
+        OPTIMISTIC UI
+      </text>
+      <text x="628" y="79">
+        RECONCILE
+      </text>
     </g>
-    <g fill="#6A665B" font-family="Archivo, sans-serif" font-size="8.5" letter-spacing="0.4" text-anchor="middle">
-      <text x="204" y="114">32 BYTES PER NODE</text>
-      <text x="482" y="114">CLAIMABLE TO ZERO</text>
-      <text x="628" y="114">+8S · INDEXER</text>
+    <g
+      fill="#6A665B"
+      font-family="Archivo, sans-serif"
+      font-size="8.5"
+      letter-spacing="0.4"
+      text-anchor="middle"
+    >
+      <text x="204" y="114">
+        32 BYTES PER NODE
+      </text>
+      <text x="482" y="114">
+        CLAIMABLE TO ZERO
+      </text>
+      <text x="628" y="114">
+        +8S · INDEXER
+      </text>
     </g>
   </svg>
 </Fig>
@@ -69,8 +106,6 @@ Precision is the second constraint. ALKIMI carries nine decimals, so any float a
 The platform is live at labs.alkimi.org, with public documentation at docs.alkimi.org. The features I worked on include the staking pool surface with its gating and validation, on-chain Merkle claims, the auto-stake toggle, rewards history with CSV export, the token unlock visualization, and the dual-signature migration form.
 
 The test suite runs about 515 cases across 19 files, and the staking hook is tested against mocked RPC failure modes, including each tier of the coin-fetch fallback. Coverage runs on every pull request in CI.
-
-[TODO: Dani — anonymised usage or reliability numbers, if any are cleared for publication]
 
 ## What I'd do differently
 

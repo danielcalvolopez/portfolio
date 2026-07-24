@@ -39,6 +39,33 @@ describe('U8: document grammar', () => {
   });
 });
 
+describe('U6: CrediLabs ownership accuracy (SPEC confidentiality rules)', () => {
+  it('role wording scopes ownership to the frontend, inside a team', () => {
+    const credi = loadCaseStudies().find((s) => s.slug === 'credilabs');
+    expect(credi?.role).toBe(
+      'Frontend owner (architecture + implementation) in a cross-functional team',
+    );
+  });
+
+  it('credilabs copy is past tense: no ongoing-engagement language', () => {
+    const credi = loadCaseStudies().find((s) => s.slug === 'credilabs');
+    const text = `${credi?.abstract} ${stripTodos(credi?.body ?? '')}`.toLowerCase();
+    for (const banned of ['currently', 'ongoing', 'to this day', 'we continue']) {
+      expect(text, banned).not.toContain(banned);
+    }
+  });
+
+  it('nobody but RetryFi claims UI/UX design', () => {
+    for (const study of loadCaseStudies()) {
+      if (study.slug === 'retryfi') continue;
+      const text = `${study.abstract} ${study.body}`.toLowerCase();
+      for (const banned of ['designed the ui', 'designed the ux', 'visual design was mine']) {
+        expect(text, `${study.slug}: ${banned}`).not.toContain(banned);
+      }
+    }
+  });
+});
+
 describe('U1b: secondary work entries', () => {
   it('validates all secondary entries against the schema', () => {
     const entries = loadSecondary();

@@ -41,7 +41,15 @@ export default function WorkPage() {
           {secondary.map((e) => (
             <li key={e.title}>
               <p>
-                <b>{e.title}</b>{' '}
+                <b>
+                  {e.url ? (
+                    <Link href={e.url} target="_blank" rel="noopener noreferrer">
+                      {e.title}
+                    </Link>
+                  ) : (
+                    e.title
+                  )}
+                </b>{' '}
                 <span className="label">
                   {e.role} · <TodoText text={e.period} />
                 </span>

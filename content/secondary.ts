@@ -17,5 +17,6 @@ export const secondary = [
     role: 'Contributor',
     period: '2023 — present',
     line: 'Contributed to the marketing site.',
+    url: 'https://alkimi.org',
   },
 ];

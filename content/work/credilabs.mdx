@@ -3,9 +3,9 @@ title: "The CrediLabs frontend, from conception to production"
 slug: credilabs
 role: "Frontend owner (architecture + implementation) in a cross-functional team"
 period: "2024 — 2025"
-stack: ["[TODO: Dani — confirm public stack]"]
+stack: [Next.js, TypeScript, wagmi/viem, Tailwind, Drizzle]
 summary: "The frontend of an on-chain platform, owned from conception to production inside a cross-functional team."
-abstract: "CrediLabs is an on-chain platform built by a dedicated team. I was involved from conception and owned the frontend, architecture through production, working alongside backend, infra, and QA engineers. This case study covers the frontend architecture, the collaboration contracts that kept the team fast, and what shipped."
+abstract: "CrediLabs was an asset-tokenization platform: users minted a platform token from USDC, staked it into pools, and managed linked, whitelisted wallets behind KYC. A cross-functional team built it; I was involved from conception and owned the frontend, architecture through implementation, alongside dedicated backend, infra, and QA engineers. This case study covers the boundary contracts that kept that team fast, and what shipped."
 indexTerms: [frontend architecture, on-chain constraints, API contracts, cross-functional delivery]
 links:
   - { label: credilabs.io, url: "https://credilabs.io" }
@@ -15,24 +15,61 @@ order: 3
 
 ## Context
 
-[TODO: Dani — slice 5; past tense throughout, frontend scope only, per SPEC ownership rules]
+CrediLabs was an asset-tokenization platform on Ethereum. Users minted the platform token from USDC, staked it into pools with selectable durations, linked wallets to their account and requested whitelisting, and passed through KYC before any of it. The work ran from mid-2024 to mid-2025 as a client engagement, delivered in ticketed phases through dev and QA branches.
+
+The team was cross-functional: dedicated backend, infra, and QA engineers, and me on the frontend. I was involved from conception and owned the frontend end to end, from architecture to implementation to the test harness and its CI. The visual design was not mine; building it truthfully was. Everything below stays inside that frontend boundary.
 
 ## Problem & constraints
 
-[TODO: Dani]
+The frontend sat between three sources of truth that did not know about each other: a partner backend's versioned REST API, a frontend-owned Postgres holding accounts and wallets, and the chain itself. Each had its own failure modes and its own pace of change, and the UI had to present one coherent story assembled from all three.
+
+The second constraint was the team seam. The backend belonged to other engineers on their own schedule, so the boundary needed a contract that survived both sides changing, negotiated by ticket rather than by breakage. The third was the chain's ceremony: ERC-20 approve-then-act flows, token decimals, reverts that arrive as bytes, and balances that go stale with every block.
 
 ## Architecture & decisions
 
-[TODO: Dani]
+**One choke point for the backend, with trust priced in.** Every call to the partner API went through a single typed fetch wrapper that injected auth, attached cache tags, normalized errors (including expired sessions and non-JSON bodies), and returned one envelope shape to every caller. Validation was two-tier, matched to ownership: the routes over my own database validated every request at runtime with schemas derived from the table definitions, while the partner boundary was typed at compile time and its changes negotiated by ticket. That split kept the team fast; its cost shows up below.
+
+<Fig n="1" caption="Three sources of truth, one envelope. The interface never met a raw response. Linework prints in the spot ink.">
+  <svg viewBox="0 0 690 224" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Frontend boundary diagram">
+    <g fill="none" stroke="#0057A8" stroke-width="1.5">
+      <rect x="44" y="8" width="180" height="40"/>
+      <rect x="255" y="8" width="180" height="40"/>
+      <rect x="466" y="8" width="180" height="40"/>
+      <rect x="195" y="96" width="300" height="40"/>
+      <rect x="265" y="176" width="160" height="40"/>
+      <path d="M134 48v12h121v36m-5 -8 5 8 5-8"/>
+      <path d="M345 48v48m-5 -8 5 8 5-8"/>
+      <path d="M556 48v12h-121v36m-5 -8 5 8 5-8"/>
+      <path d="M345 136v40m-5 -8 5 8 5-8"/>
+    </g>
+    <g fill="#1B1915" font-family="Archivo, sans-serif" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle">
+      <text x="134" y="24">PARTNER API</text>
+      <text x="345" y="24">OWN POSTGRES</text>
+      <text x="556" y="24">CHAIN</text>
+      <text x="345" y="113">ONE NORMALIZED ENVELOPE</text>
+      <text x="345" y="200">THE INTERFACE</text>
+    </g>
+    <g fill="#6A665B" font-family="Archivo, sans-serif" font-size="8.5" letter-spacing="0.4" text-anchor="middle">
+      <text x="134" y="38">TYPED · TICKETED</text>
+      <text x="345" y="38">SCHEMA-VALIDATED</text>
+      <text x="556" y="38">WAGMI · PER BLOCK</text>
+      <text x="345" y="127">DATA · ERROR · SUCCESS · STATUS</text>
+    </g>
+  </svg>
+</Fig>
+
+**Cache tags as the reconciliation vocabulary.** Server reads carried named cache tags; mutations busted them; and after an on-chain transaction confirmed, the success handler revalidated the tags and refreshed the route so the server-rendered state caught up with the chain. Balances refetched on every new block. The choreography meant post-transaction truth arrived without a manual refresh, at the cost of naming and maintaining that tag vocabulary as carefully as an API.
+
+**Reverts became sentences.** A decoder walked the error tree from the chain library, matched revert data against the contract interface, and surfaced the Solidity error by name, so a failed stake told the user what the contract objected to instead of showing a hex string. Around it, an explicit state machine (idle, approving, staking, unstaking, success) drove the modal: button labels, disabled states, and the auto-close all derived from one variable rather than scattered booleans. Addresses were typed as such end to end, so a plain string could not reach a contract call.
 
 ## What shipped
 
-[TODO: Dani]
+The platform went to production at credilabs.io: mint and redeem with allowance handling, staking pools with durations and unstake, wallet linking with whitelist review states, a KYC-gated onboarding state machine, and a dashboard with transaction history. Alongside the features, I set up the unit test harness with tests running on every pull request, and the security-header pass. Delivery ran in phases; QA had its own branch and gate, and the engagement concluded in 2025.
 
 ## What I'd do differently
 
 <Warning>
 
-[TODO: Dani]
+Compile-time types were not enough for the partner boundary: when the backend's shapes drifted, the frontend found out at runtime in QA rather than at the seam, and each discovery cost a round trip through the ticket queue. Runtime validation on both tiers would have moved those failures to the boundary where they belonged. I also never added route-level error boundaries, so failure states lived in toasts and a manual loading screen, and one unhandled render error had no fallback. And too much debug logging survived into production paths, including an error log that printed more configuration than it should have. The contract discipline was right; I would just enforce it with the machine instead of the ticket queue.
 
 </Warning>

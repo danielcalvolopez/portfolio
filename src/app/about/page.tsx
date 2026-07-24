@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -42,15 +43,27 @@ export default function AboutPage() {
       <h2>Correspondence</h2>
       <ul className="plain-list">
         <li>
-          <a href="https://x.com/danicalvo89">x.com/danicalvo89</a>
+          <Link href="https://x.com/danicalvo89" target="_blank" rel="noopener noreferrer">
+            x.com/danicalvo89
+          </Link>
         </li>
         <li>
-          <a href="https://github.com/danielcalvolopez">github.com/danielcalvolopez</a>
+          <Link
+            href="https://github.com/danielcalvolopez"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/danielcalvolopez
+          </Link>
         </li>
         <li>
-          <a href="https://www.linkedin.com/in/daniel-calvo-lopez-97607187/">
+          <Link
+            href="https://www.linkedin.com/in/daniel-calvo-lopez-97607187/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             linkedin.com/in/daniel-calvo-lopez
-          </a>
+          </Link>
         </li>
         <li>
           <a href="mailto:acidistrict@gmail.com">acidistrict@gmail.com</a>
