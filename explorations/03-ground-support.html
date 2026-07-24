@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dani Calvo — Ground Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=Chivo+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F4F1;
+    --ink: #111110;
+    --orange: #FF4F00;
+    --dim: #6C6C66;
+    --rule: #C9C9C2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Archivo", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "Chivo Mono", monospace; }
+  a { color: var(--ink); text-decoration: none; }
+
+  .grid { max-width: 1160px; margin: 0 auto; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); }
+
+  /* Unit tab */
+  .unit-tab {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--ink);
+  }
+  .unit-tab .plate {
+    background: var(--orange);
+    color: #fff;
+    font-family: "Chivo Mono", monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    padding: 10px 16px;
+    text-transform: uppercase;
+  }
+  .unit-tab .path {
+    padding: 10px 16px;
+    font-family: "Chivo Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .unit-tab .date { margin-left: auto; padding: 10px 16px; font-family: "Chivo Mono", monospace; font-size: 11px; color: var(--dim); }
+
+  /* Display name */
+  .display { padding: 56px 32px 40px; border-bottom: 1px solid var(--ink); }
+  .display h1 {
+    font-size: clamp(64px, 11vw, 128px);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+  }
+
+  /* Thesis row: two columns with center rule */
+  .thesis {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    border-bottom: 1px solid var(--ink);
+  }
+  .thesis .left {
+    padding: 28px 32px;
+    border-right: 1px solid var(--rule);
+  }
+  .thesis .left .k {
+    font-family: "Chivo Mono", monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .thesis .left .v { margin-top: 6px; font-weight: 600; font-size: 17px; }
+  .thesis .right { padding: 28px 32px; }
+  .thesis .right p { max-width: 64ch; font-size: 17.5px; }
+  .thesis .right a { border-bottom: 2px solid var(--orange); }
+  .thesis .right a:hover { color: var(--orange); }
+  .thesis .terms {
+    margin-top: 16px;
+    font-family: "Chivo Mono", monospace;
+    font-size: 11.5px;
+    color: var(--dim);
+  }
+
+  /* Work rows as spec plates */
+  .work-label {
+    padding: 14px 32px;
+    border-bottom: 1px solid var(--rule);
+    font-family: "Chivo Mono", monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .work-label b { color: var(--orange); font-weight: 500; }
+  .row {
+    display: grid;
+    grid-template-columns: 140px 1fr 300px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .row:hover { background: #EDEDE8; }
+  .row .cell { padding: 26px 32px; }
+  .row .desig {
+    border-right: 1px solid var(--rule);
+    font-family: "Chivo Mono", monospace;
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.9;
+  }
+  .row .desig .st { display: block; font-size: 10px; letter-spacing: 0.12em; }
+  .row .desig .st.live { color: var(--orange); }
+  .row h2 a {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .row h2 a:hover { color: var(--orange); }
+  .row .sub { margin-top: 8px; font-size: 14.5px; color: var(--dim); max-width: 52ch; }
+  .row .spec {
+    border-left: 1px solid var(--rule);
+    font-family: "Chivo Mono", monospace;
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 2;
+  }
+  .row .spec b { color: var(--ink); font-weight: 500; }
+
+  /* Process strip + nameplate footer */
+  .process { padding: 22px 32px; border-bottom: 1px solid var(--ink); }
+  .process a { font-weight: 600; font-size: 17px; }
+  .process a:hover { color: var(--orange); }
+  .process .arrow { color: var(--orange); }
+  footer.nameplate {
+    background: var(--ink);
+    color: #DDDDD6;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 32px;
+    font-family: "Chivo Mono", monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 860px) {
+    .thesis { grid-template-columns: 1fr; }
+    .thesis .left { border-right: none; border-bottom: 1px solid var(--rule); }
+    .row { grid-template-columns: 90px 1fr; }
+    .row .spec { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="grid">
+
+  <header class="unit-tab">
+    <span class="plate">Unit 01</span>
+    <span class="path">Portfolio / Home</span>
+    <span class="date">2026-07-24</span>
+  </header>
+
+  <section class="display">
+    <h1>Dani Calvo</h1>
+  </section>
+
+  <section class="thesis" aria-label="Thesis">
+    <div class="left">
+      <p class="k">Designation</p>
+      <p class="v">Software engineer</p>
+      <p class="k" style="margin-top:18px">Current</p>
+      <p class="v" style="font-size:15px">Front-end engineer, Alkimi</p>
+    </div>
+    <div class="right">
+      <p>I build platforms end to end: spec-first, test-first, with AI as engineering
+      leverage. At <a href="https://alkimi.org">Alkimi</a> we&rsquo;re pioneering a new
+      way to run programmatic advertising and building the industry standards to carry
+      it. On my own time I shipped RetryFi, a payment-recovery SaaS, alone from
+      architecture to launch.</p>
+      <p class="terms">INDEX: AGENTIC ENGINEERING · WEB3 PLATFORMS · SAAS · NEXT.JS · TDD</p>
+    </div>
+  </section>
+
+  <p class="work-label"><b>SELECTED WORK</b> — 3 UNITS, DOCUMENTED</p>
+
+  <section aria-label="Selected work">
+    <article class="row">
+      <div class="cell desig">RF-01<span class="st live">LIVE</span></div>
+      <div class="cell">
+        <h2><a href="#">RetryFi, a dunning engine owned end to end</a></h2>
+        <p class="sub">Solo-built Stripe failed-payment recovery SaaS: idea, architecture, production, launch.</p>
+      </div>
+      <div class="cell spec">
+        <b>ROLE</b> — SOLO FOUNDER<br>
+        <b>SCOPE</b> — FULL STACK + INFRA + GTM<br>
+        <b>PERIOD</b> — 2026 / PRESENT
+      </div>
+    </article>
+    <article class="row">
+      <div class="cell desig">AL-02<span class="st live">LIVE</span></div>
+      <div class="cell">
+        <h2><a href="#">Live staking at Alkimi Labs, where mistakes cost money</a></h2>
+        <p class="sub">On-chain state in the UI, reliability as the feature, where a wrong number is someone&rsquo;s money.</p>
+      </div>
+      <div class="cell spec">
+        <b>ROLE</b> — FRONTEND ENGINEER<br>
+        <b>SCOPE</b> — STAKING TX LAYER + FLOWS<br>
+        <b>PERIOD</b> — 2023 / PRESENT
+      </div>
+    </article>
+    <article class="row">
+      <div class="cell desig">CL-03<span class="st">DELIVERED</span></div>
+      <div class="cell">
+        <h2><a href="#">The CrediLabs frontend, from conception to production</a></h2>
+        <p class="sub">Frontend of an on-chain platform, owned from conception to production inside a cross-functional team.</p>
+      </div>
+      <div class="cell spec">
+        <b>ROLE</b> — FRONTEND OWNER<br>
+        <b>SCOPE</b> — ARCHITECTURE + IMPLEMENTATION<br>
+        <b>PERIOD</b> — 2024 / 2025
+      </div>
+    </article>
+  </section>
+
+  <section class="process">
+    <a href="#">How I build: spec to tests to production <span class="arrow">&rarr;</span></a>
+  </section>
+
+  <footer class="nameplate">
+    <span>BUILD A1B2C3D · 14.2 KB · LIGHTHOUSE 100</span>
+    <span>STATIC EXPORT — NO CLIENT JS</span>
+  </footer>
+
+</div>
+</body>
+</html>

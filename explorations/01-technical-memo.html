@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dani Calvo — Technical Memo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAFAF7;
+    --ink: #171614;
+    --ink-2: #6E6A61;
+    --spot: #0057A8;
+    --rule: #DDDAD1;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "IBM Plex Mono", monospace; }
+  a { color: var(--spot); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+  }
+
+  /* Running head */
+  .running-head {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0 12px;
+    border-bottom: 1px solid var(--ink);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .running-head b { color: var(--ink); font-weight: 500; }
+
+  /* Masthead + memo meta */
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 48px;
+    align-items: end;
+    padding: 72px 0 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .masthead h1 {
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 0.98;
+  }
+  .masthead .role {
+    margin-top: 14px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .meta-table {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    border-top: 1px solid var(--ink);
+  }
+  .meta-table div {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .meta-table dt { color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
+  .meta-table dd { font-weight: 500; }
+
+  /* Section labels */
+  .label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--spot);
+  }
+  section { padding: 40px 0; border-bottom: 1px solid var(--rule); }
+
+  /* Abstract */
+  .abstract { display: grid; grid-template-columns: 160px 1fr; gap: 24px; }
+  .abstract p { max-width: 62ch; }
+  .abstract .body { font-size: 18px; }
+  .index-terms {
+    margin-top: 18px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+  .index-terms b { color: var(--ink); font-weight: 500; }
+
+  /* Contents */
+  .contents-head { display: grid; grid-template-columns: 160px 1fr; gap: 24px; margin-bottom: 4px; }
+  .toc { list-style: none; }
+  .toc li {
+    display: grid;
+    grid-template-columns: 160px 1fr 220px;
+    gap: 24px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .toc li:first-child { border-top: none; }
+  .toc .no {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .toc .title a { color: var(--ink); font-weight: 600; font-size: 20px; letter-spacing: -0.01em; }
+  .toc .title a:hover { color: var(--spot); }
+  .toc .title .sub { margin-top: 3px; font-size: 14px; color: var(--ink-2); }
+  .toc .meta {
+    text-align: right;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+  .appendix {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 24px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+    margin-top: 4px;
+  }
+  .appendix a { font-weight: 500; }
+
+  /* Footer */
+  footer {
+    padding-top: 18px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--ink-2);
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 720px) {
+    .masthead { grid-template-columns: 1fr; gap: 28px; }
+    .masthead h1 { font-size: 44px; }
+    .abstract, .contents-head, .appendix { grid-template-columns: 1fr; gap: 10px; }
+    .toc li { grid-template-columns: 48px 1fr; }
+    .toc .meta { grid-column: 2; text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="running-head">
+    <span><b>DC-M-2026-001</b>&ensp;·&ensp;Portfolio — Home</span>
+    <span>Dani Calvo&ensp;·&ensp;Rev A</span>
+  </header>
+
+  <div class="masthead">
+    <div>
+      <h1>Dani Calvo</h1>
+      <p class="role">Software engineer</p>
+    </div>
+    <dl class="meta-table">
+      <div><dt>Document</dt><dd>Technical memo</dd></div>
+      <div><dt>Date</dt><dd>2026-07-24</dd></div>
+      <div><dt>Status</dt><dd>Released</dd></div>
+      <div><dt>Pages</dt><dd>1 of 1</dd></div>
+    </dl>
+  </div>
+
+  <section class="abstract" aria-label="Abstract">
+    <span class="label">Abstract</span>
+    <div>
+      <p class="body">I build platforms end to end: spec-first, test-first, with AI as
+      engineering leverage. I&rsquo;m a front-end engineer at <a href="https://alkimi.org">Alkimi</a>,
+      where we&rsquo;re pioneering a new way to run programmatic advertising and building
+      the industry standards to carry it. On my own time I shipped RetryFi, a
+      payment-recovery SaaS, alone from architecture to launch.</p>
+      <p class="index-terms"><b>Index terms</b>: agentic engineering, web3 platforms,
+      SaaS, Next.js, test-driven development</p>
+    </div>
+  </section>
+
+  <section aria-label="Contents">
+    <div class="contents-head"><span class="label">Contents</span></div>
+    <ol class="toc">
+      <li>
+        <span class="no">01</span>
+        <div class="title">
+          <a href="#">RetryFi, a dunning engine owned end to end</a>
+          <p class="sub">Solo-built Stripe failed-payment recovery SaaS: idea, architecture, production, launch.</p>
+        </div>
+        <div class="meta">Solo founder — full stack<br>2026 — present</div>
+      </li>
+      <li>
+        <span class="no">02</span>
+        <div class="title">
+          <a href="#">Live staking at Alkimi Labs, where mistakes cost money</a>
+          <p class="sub">On-chain state in the UI, reliability as the feature, where a wrong number is someone&rsquo;s money.</p>
+        </div>
+        <div class="meta">Frontend engineer<br>2023 — present</div>
+      </li>
+      <li>
+        <span class="no">03</span>
+        <div class="title">
+          <a href="#">The CrediLabs frontend, from conception to production</a>
+          <p class="sub">Frontend of an on-chain platform, owned from conception to production inside a team.</p>
+        </div>
+        <div class="meta">Frontend owner<br>2024 — 2025</div>
+      </li>
+    </ol>
+    <div class="appendix">
+      <span class="label">Appendix</span>
+      <a href="#">How I build: spec to tests to production</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>build a1b2c3d&ensp;·&ensp;14.2 KB&ensp;·&ensp;Lighthouse 100</span>
+    <span>rendered static — no client JS</span>
+  </footer>
+
+</div>
+</body>
+</html>
