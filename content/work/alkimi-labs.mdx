@@ -1,11 +1,11 @@
 ---
 title: "Live staking at Alkimi Labs, where mistakes cost money"
 slug: alkimi-labs
-role: "Frontend engineer — feature owner, ongoing collaboration"
+role: "Frontend engineer — ongoing collaboration"
 period: "2024 — present"
 stack: [Next.js, TypeScript, React Query, Sui, wagmi/viem]
 summary: "A live staking platform where real funds move: on-chain state in the UI, reliability as the feature."
-abstract: "Alkimi Labs is the live staking platform for the ALKIMI token on Sui: users stake into a pool, claim rewards proved by Merkle proofs, and manage on-chain positions. I work on it as a frontend engineer in heavy, ongoing collaboration with the team; the staking transaction layer, the enrollment surface, and the account migration flow are mine. This case study covers what correctness means in a UI where a wrong number is someone's money."
+abstract: "Alkimi Labs is the live staking platform for the ALKIMI token on Sui: users stake into a pool, claim rewards proved by Merkle proofs, and manage on-chain positions. I work on it as a frontend engineer in heavy, ongoing collaboration with the team, most deeply on the staking transaction layer, the enrollment surface, and the account migration flow. This case study covers what correctness means in a UI where a wrong number is someone's money."
 indexTerms: [Sui, staking, Merkle proofs, optimistic UI, token precision]
 links:
   - { label: labs.alkimi.org, url: "https://labs.alkimi.org" }
@@ -18,7 +18,7 @@ order: 2
 
 Alkimi Labs is the staking platform for the ALKIMI token. Users connect a Sui wallet, stake into a live pool, claim rewards, and follow the token unlock schedule; an explorer surfaces the ad exchange's auction activity alongside. It is a team product, and a live one: real balances move through it every day.
 
-This case study stays inside my scope. The Sui transaction layer for staking, unstaking, and claiming is mine, along with the staking enrollment surface, the rewards chart data, the tokenomics model behind the unlock page, and the flow that migrates an Ethereum account to Sui. The rest of the platform is the team's work, which I build on and with.
+This case study stays close to the features I know from the inside: the Sui transaction layer for staking, unstaking, and claiming, the staking enrollment surface, the rewards chart data, the tokenomics model behind the unlock page, and the flow that migrates an Ethereum account to Sui. None of it is solo work. I built these with the frontend team, and the wider platform belongs to the whole team.
 
 ## Problem & constraints
 
@@ -28,7 +28,7 @@ Precision is the second constraint. ALKIMI carries nine decimals, so any float a
 
 ## Architecture & decisions
 
-**Optimistic truth with scheduled reconciliation.** When a claim succeeds, the UI zeroes the claimable amount in the query cache immediately; a new stake prepends a provisional row. Eight seconds later, a revalidation pass refetches from the indexer and replaces the provisional state with recorded state. The trade-off is a short window where the interface is ahead of the records. I accepted it because the alternative, numbers frozen for seconds after the wallet closes, teaches users not to trust the page. The eight-second constant is honest about the indexer rather than elegant.
+**Optimistic truth with scheduled reconciliation.** When a claim succeeds, the UI zeroes the claimable amount in the query cache immediately; a new stake prepends a provisional row. Eight seconds later, a revalidation pass refetches from the indexer and replaces the provisional state with recorded state. The trade-off is a short window where the interface is ahead of the records. We accepted it because the alternative, numbers frozen for seconds after the wallet closes, teaches users not to trust the page. The eight-second constant is honest about the indexer rather than elegant.
 
 **Plan for the RPC to be wrong.** Building a stake transaction requires the wallet's coin objects, and under load the node's index sometimes reports a funded wallet as empty. The stake path degrades through three tiers: a paginated coin query, cross-checked against the wallet's reported balance; a full coin scan filtered client-side; and finally a raw object query by type. More code paths, and each one needs its own tests against mocked failures, but a wallet with funds must never be told it has none.
 
@@ -62,11 +62,11 @@ Precision is the second constraint. ALKIMI carries nine decimals, so any float a
   </svg>
 </Fig>
 
-**Prove ownership twice.** The Ethereum-to-Sui account migration builds one canonical message, stamped with a timestamp and a nonce, and requires a signature from both wallets before the request can be submitted. Two wallets connected in one session is real friction, and the form spends most of its code explaining which of the four connect-and-sign states the user is in. I accepted the friction because the alternative is support tickets about asset linkage, and those are settled by proof, not by sympathy.
+**Prove ownership twice.** The Ethereum-to-Sui account migration builds one canonical message, stamped with a timestamp and a nonce, and requires a signature from both wallets before the request can be submitted. Two wallets connected in one session is real friction, and the form spends most of its code explaining which of the four connect-and-sign states the user is in. We accepted the friction because the alternative is support tickets about asset linkage, and those are settled by proof, not by sympathy.
 
 ## What shipped
 
-The platform is live at labs.alkimi.org, with public documentation at docs.alkimi.org. Within my scope: the staking pool surface with its gating and validation, on-chain Merkle claims, the auto-stake toggle, rewards history with CSV export, the token unlock visualization, and the dual-signature migration form.
+The platform is live at labs.alkimi.org, with public documentation at docs.alkimi.org. The features I worked on include the staking pool surface with its gating and validation, on-chain Merkle claims, the auto-stake toggle, rewards history with CSV export, the token unlock visualization, and the dual-signature migration form.
 
 The test suite runs about 515 cases across 19 files, and the staking hook is tested against mocked RPC failure modes, including each tier of the coin-fetch fallback. Coverage runs on every pull request in CI.
 
