@@ -1,4 +1,4 @@
-# Dani Calvo — Portfolio
+# Dani Calvo
 
 A personal portfolio that thinks it's a printed type specimen. Serif body (Charis SIL), grotesque headings (Archivo), running heads, a footer line — basically a book that happens to ship as a website.
 
