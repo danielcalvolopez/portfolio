@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "og": "node scripts/og.mjs",
     "data": "node scripts/data.mjs",
     "build": "node scripts/og.mjs && next build && node scripts/stamp.mjs",
