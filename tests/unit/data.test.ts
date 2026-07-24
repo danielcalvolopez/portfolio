@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SERIES_START, windows, downsampleWeekly, summarize, monthYear, renderChartSvg } from '../../scripts/data.mjs';
+import { SERIES_START, windows, downsampleWeekly, summarize, monthYear, renderChartSvg, stampMdx } from '../../scripts/data.mjs';
 
 const day = (date: string, imprCount: number) => ({ date, imprCount });
 
@@ -111,5 +111,48 @@ describe('renderChartSvg', () => {
 
   it('stays well under the 5 KB page-weight budget', () => {
     expect(Buffer.byteLength(svg)).toBeLessThan(5000);
+  });
+});
+
+describe('stampMdx', () => {
+  const fixture = [
+    'alongside — {/*data:impr*/}around 1.0 million impressions settled per day as of January 2024{/*data:end*/}. It is',
+    'a team product.',
+    '',
+    '<Fig n="2" caption="Impressions settled per day across the exchange, weekly means, January 2024 to January 2024. Source: Alkimi community data API (docs.alkimi.org), retrieved 2024-01-31. Linework prints in the spot ink." src="/figs/alkimi-throughput.svg" alt="Line chart" w="690" h="220" />',
+  ].join('\n');
+  const opts = { display: '8.8 million', monthYear: 'July 2026', retrieved: '2026-07-24' };
+
+  it('rewrites the stat span and both caption tokens', () => {
+    const out = stampMdx(fixture, opts);
+    expect(out).toContain(
+      '{/*data:impr*/}around 8.8 million impressions settled per day as of July 2026{/*data:end*/}',
+    );
+    expect(out).toContain('January 2024 to July 2026. Source:');
+    expect(out).toContain('retrieved 2026-07-24');
+    expect(out).not.toContain('2024-01-31');
+  });
+
+  it('is idempotent', () => {
+    const once = stampMdx(fixture, opts);
+    expect(stampMdx(once, opts)).toBe(once);
+  });
+
+  it('does not touch the fixed series start in the caption', () => {
+    expect(stampMdx(fixture, opts)).toContain('weekly means, January 2024 to July 2026');
+  });
+
+  it('throws when the stat markers are missing', () => {
+    expect(() => stampMdx(fixture.replace('{/*data:impr*/}', ''), opts)).toThrow(/data:impr/);
+  });
+
+  it('throws when the throughput Fig tag is missing', () => {
+    expect(() => stampMdx(fixture.replace('alkimi-throughput.svg', 'other.svg'), opts)).toThrow(/Fig/);
+  });
+
+  it('throws when a caption token is missing', () => {
+    expect(() => stampMdx(fixture.replace('retrieved 2024-01-31', 'retrieved sometime'), opts)).toThrow(
+      /caption/,
+    );
   });
 });

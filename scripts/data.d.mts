@@ -12,3 +12,7 @@ export function renderChartSvg(
   weekly: { date: string; mean: number }[],
   opts: { monthYear: string },
 ): string;
+export function stampMdx(
+  mdx: string,
+  opts: { display: string; monthYear: string; retrieved: string },
+): string;

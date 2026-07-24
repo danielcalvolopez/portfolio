@@ -100,3 +100,27 @@ export function renderChartSvg(weekly, { monthYear: endLabel }) {
     ``,
   ].join('\n');
 }
+
+/* Source-level stamping, same move stamp.mjs makes post-build for page
+   weight. Explicit markers, loud failures, no partial writes. */
+export function stampMdx(mdx, { display, monthYear: endLabel, retrieved }) {
+  const statRe = /\{\/\*data:impr\*\/\}[\s\S]*?\{\/\*data:end\*\/\}/;
+  if (!statRe.test(mdx)) throw new Error('stampMdx: {/*data:impr*/}…{/*data:end*/} markers not found');
+
+  const figRe = /<Fig\b[^>]*src="\/figs\/alkimi-throughput\.svg"[^>]*\/>/;
+  const fig = mdx.match(figRe)?.[0];
+  if (!fig) throw new Error('stampMdx: Fig tag for /figs/alkimi-throughput.svg not found');
+
+  const rangeRe = /to [A-Z][a-z]+ \d{4}\. Source:/;
+  const retrievedRe = /retrieved \d{4}-\d{2}-\d{2}/;
+  if (!rangeRe.test(fig) || !retrievedRe.test(fig)) {
+    throw new Error('stampMdx: caption tokens ("to <Month> <YYYY>. Source:" / "retrieved <date>") not found');
+  }
+
+  return mdx
+    .replace(
+      statRe,
+      `{/*data:impr*/}around ${display} impressions settled per day as of ${endLabel}{/*data:end*/}`,
+    )
+    .replace(fig, fig.replace(rangeRe, `to ${endLabel}. Source:`).replace(retrievedRe, `retrieved ${retrieved}`));
+}
