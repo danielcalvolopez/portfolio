@@ -51,9 +51,14 @@ testable and keeps I/O at the edges:
 
 ```
 fetchSeries()        31-day windows, sequential, from SERIES_START = '2024-01-01'
-                     to today; zod-validates rows; capped backoff on 429
-downsampleWeekly()   daily → weekly means; trailing partial week dropped
-summarize()          trailing-7-day mean + display formatting ("8.8 million")
+                     to today; zod-validates rows; on 429, wait until
+                     X-RateLimit-Reset capped at 60s, max 3 retries per window,
+                     then fail
+downsampleWeekly()   daily → weekly means over consecutive 7-day buckets
+                     anchored at SERIES_START (not ISO calendar weeks);
+                     trailing partial bucket dropped
+summarize()          trailing-7-day mean + display formatting: millions to one
+                     decimal ("8.8 million")
 renderChartSvg()     weekly series + retrieved date → SVG string
 stampMdx()           stat text + caption date into alkimi-labs.mdx, idempotent
 ```
@@ -70,7 +75,7 @@ Outputs (all committed):
 
 Matches the conventions of `public/figs/alkimi-claim.svg`:
 
-- 690-wide viewBox (height ~220), `role="img"` + `aria-label`.
+- `viewBox="0 0 690 220"`, `role="img"` + `aria-label`.
 - Data line: single polyline, spot ink `#0057A8`, `stroke-width="1.5"`, no fill.
 - Axes/gridlines: hairlines in secondary ink `#6A665B`.
 - Labels: Archivo uppercase, small sizes, letter-spacing, like existing figures.
@@ -89,8 +94,10 @@ Matches the conventions of `public/figs/alkimi-claim.svg`:
 - **Fig. 2 (What shipped section):** placed here as evidence the platform is live,
   and to avoid renumbering the existing Fig. 1. Caption pattern: "Impressions settled
   per day, weekly means, January 2024 to July 2026. Source: Alkimi community data API
-  (docs.alkimi.org), retrieved 2026-07-24." The script updates the
-  `retrieved YYYY-MM-DD` token and the date-range text inside the caption.
+  (docs.alkimi.org), retrieved 2026-07-24." The script locates the Fig tag by its
+  `src="/figs/alkimi-throughput.svg"` attribute and rewrites exactly two tokens in
+  its caption: the range end (`to <Month> <YYYY>`) and the retrieval date
+  (`retrieved <YYYY-MM-DD>`). Either token missing → fail without writing.
 - **Allowlist note:** `docs.alkimi.org` is already in the content-rules allowlist;
   "api.alkimi.org" appears only as schemeless text, which the URL check ignores. No
   allowlist change needed.
