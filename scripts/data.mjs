@@ -2,6 +2,8 @@
 // docs/superpowers/specs/2026-07-24-alkimi-live-data-design.md). Run via
 // `npm run data`; deliberately NOT part of `npm run build` — the site ships
 // the committed snapshot and never depends on the API being up.
+import { z } from 'zod';
+
 export const SERIES_START = '2024-01-01';
 
 const DAY_MS = 86_400_000;
@@ -123,4 +125,39 @@ export function stampMdx(mdx, { display, monthYear: endLabel, retrieved }) {
       `{/*data:impr*/}around ${display} impressions settled per day as of ${endLabel}{/*data:end*/}`,
     )
     .replace(fig, fig.replace(rangeRe, `to ${endLabel}. Source:`).replace(retrievedRe, `retrieved ${retrieved}`));
+}
+
+const API = 'https://api.alkimi.org/api/v1/public/data';
+
+/* Live API shape (verified 2026-07-24): camelCase, unlike the snake_case in
+   docs.alkimi.org. Unlisted fields (txnCount, alkimiRevenueInUSD, …) are
+   tolerated and dropped by zod's default strip behavior. */
+const ApiRow = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  imprCount: z.number().int().nonnegative(),
+});
+const ApiResponse = z.object({ status: z.literal('Success'), data: z.array(ApiRow) });
+
+const defaultSleep = (napMs) => new Promise((resolve) => setTimeout(resolve, napMs));
+
+async function fetchWindow(win, fetchImpl, sleep) {
+  const url = `${API}?startDate=${win.start}&endDate=${win.end}`;
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetchImpl(url);
+    if (res.status === 429 && attempt < 3) {
+      const resetMs = Number(res.headers.get('x-ratelimit-reset')) * 1000 - Date.now();
+      await sleep(Math.min(Math.max(resetMs, 1000), 60_000));
+      continue;
+    }
+    if (!res.ok) throw new Error(`alkimi api: ${url} returned HTTP ${res.status}`);
+    return ApiResponse.parse(await res.json()).data.map(({ date, imprCount }) => ({ date, imprCount }));
+  }
+}
+
+export async function fetchSeries(today, fetchImpl = fetch, sleep = defaultSleep) {
+  const series = [];
+  for (const win of windows(SERIES_START, today)) {
+    series.push(...(await fetchWindow(win, fetchImpl, sleep)));
+  }
+  return series;
 }

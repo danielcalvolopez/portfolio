@@ -16,3 +16,8 @@ export function stampMdx(
   mdx: string,
   opts: { display: string; monthYear: string; retrieved: string },
 ): string;
+export function fetchSeries(
+  today: string,
+  fetchImpl?: typeof fetch,
+  sleep?: (ms: number) => Promise<void>,
+): Promise<{ date: string; imprCount: number }[]>;

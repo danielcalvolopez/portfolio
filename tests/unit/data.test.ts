@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SERIES_START, windows, downsampleWeekly, summarize, monthYear, renderChartSvg, stampMdx } from '../../scripts/data.mjs';
+import { SERIES_START, windows, downsampleWeekly, summarize, monthYear, renderChartSvg, stampMdx, fetchSeries } from '../../scripts/data.mjs';
 
 const day = (date: string, imprCount: number) => ({ date, imprCount });
 
@@ -154,5 +154,81 @@ describe('stampMdx', () => {
     expect(() => stampMdx(fixture.replace('retrieved 2024-01-31', 'retrieved sometime'), opts)).toThrow(
       /caption/,
     );
+  });
+});
+
+type MockResponse = {
+  ok: boolean;
+  status: number;
+  json: () => Promise<unknown>;
+  headers: { get: (name: string) => string | null };
+};
+
+const okResponse = (rows: unknown[]): MockResponse => ({
+  ok: true,
+  status: 200,
+  json: async () => ({ status: 'Success', data: rows }),
+  headers: { get: () => null },
+});
+
+const rateLimited: MockResponse = {
+  ok: false,
+  status: 429,
+  json: async () => ({ code: 'ALK1010' }),
+  headers: { get: (name) => (name === 'x-ratelimit-reset' ? String(Math.floor(Date.now() / 1000) + 2) : null) },
+};
+
+describe('fetchSeries', () => {
+  it('walks 31-day windows and concatenates validated camelCase rows', async () => {
+    const calls: string[] = [];
+    const fetchImpl = (async (url: string) => {
+      calls.push(url);
+      const { startDate } = Object.fromEntries(new URL(url).searchParams);
+      // Real API rows carry extra fields; only date + imprCount survive.
+      return okResponse([
+        { date: startDate, imprCount: 5, txnCount: 5, alkimiRevenueInUSD: '1.00', alkimiRevenueInTokens: 'null' },
+      ]);
+    }) as unknown as typeof fetch;
+
+    const series = await fetchSeries('2024-02-15', fetchImpl);
+    expect(calls).toEqual([
+      'https://api.alkimi.org/api/v1/public/data?startDate=2024-01-01&endDate=2024-01-31',
+      'https://api.alkimi.org/api/v1/public/data?startDate=2024-02-01&endDate=2024-02-15',
+    ]);
+    expect(series).toEqual([
+      { date: '2024-01-01', imprCount: 5 },
+      { date: '2024-02-01', imprCount: 5 },
+    ]);
+  });
+
+  it('retries a 429 after sleeping, then succeeds', async () => {
+    const naps: number[] = [];
+    const responses = [rateLimited, okResponse([{ date: '2024-01-01', imprCount: 1 }])];
+    const fetchImpl = (async () => responses.shift()) as unknown as typeof fetch;
+    const series = await fetchSeries('2024-01-01', fetchImpl, async (ms) => void naps.push(ms));
+    expect(series).toEqual([{ date: '2024-01-01', imprCount: 1 }]);
+    expect(naps).toHaveLength(1);
+    expect(naps[0]).toBeGreaterThanOrEqual(1000);
+    expect(naps[0]).toBeLessThanOrEqual(60_000);
+  });
+
+  it('gives up after 3 retries on persistent 429', async () => {
+    const fetchImpl = (async () => rateLimited) as unknown as typeof fetch;
+    await expect(fetchSeries('2024-01-01', fetchImpl, async () => {})).rejects.toThrow(/429/);
+  });
+
+  it('throws on non-OK responses', async () => {
+    const fetchImpl = (async () => ({
+      ok: false,
+      status: 500,
+      json: async () => ({}),
+      headers: { get: () => null },
+    })) as unknown as typeof fetch;
+    await expect(fetchSeries('2024-01-01', fetchImpl)).rejects.toThrow(/500/);
+  });
+
+  it('throws on schema drift', async () => {
+    const fetchImpl = (async () => okResponse([{ date: '2024-01-01', impr_count: 5 }])) as unknown as typeof fetch;
+    await expect(fetchSeries('2024-01-01', fetchImpl)).rejects.toThrow();
   });
 });
