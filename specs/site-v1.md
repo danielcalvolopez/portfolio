@@ -150,7 +150,7 @@ Throttling is DevTools Fast 3G equivalent, so the LCP < 1000 ms assertion is SPE
 content/work/*.mdx          three case studies
 content/secondary.ts        SecondaryEntry[]
 public/figs/*.svg           case-study diagrams (static SVG, spot ink)
-src/app/                    routes (RSC only), sitemap.ts, robots.ts, llms(-full).txt routes, icon.svg
+src/app/                    routes (RSC only), sitemap.ts, robots.ts, llms(-full).txt routes, icon.svg (dc mark in the Offprint grammar)
 src/components/             RunningHead, FooterLine, mdx.tsx (Fig, Data, Warning, Note, TodoText, p)
 src/lib/                    content.ts (schemas + loaders), routes.ts, site.ts, seo.ts (canonical + JSON-LD), llms.ts
 scripts/og.mjs              build-time OG images (satori + resvg)
