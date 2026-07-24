@@ -7,3 +7,8 @@ export function summarize(series: { date: string; imprCount: number }[]): {
   trailing7DayMeanImpressions: number;
   display: string;
 };
+export function monthYear(dateStr: string): string;
+export function renderChartSvg(
+  weekly: { date: string; mean: number }[],
+  opts: { monthYear: string },
+): string;

@@ -45,3 +45,58 @@ export function summarize(series) {
     display: `${(mean / 1e6).toFixed(1)} million`,
   };
 }
+
+export function monthYear(dateStr) {
+  return new Date(`${dateStr}T00:00:00Z`).toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+/* Fig. 2. Conventions follow public/figs/alkimi-claim.svg: spot ink for the
+   data line, secondary-ink hairlines, Archivo labels (SVG-in-<img> falls back
+   to system sans; true of every figure on the site). */
+export function renderChartSvg(weekly, { monthYear: endLabel }) {
+  const W = 690, H = 220, L = 46, R = 10, T = 12, B = 30;
+  const innerW = W - L - R;
+  const innerH = H - T - B;
+  const x0 = ms(weekly[0].date);
+  const x1 = ms(weekly[weekly.length - 1].date);
+  const yMax = Math.max(5e6, Math.ceil(Math.max(...weekly.map((w) => w.mean)) / 5e6) * 5e6);
+  const px = (t) => L + ((t - x0) / (x1 - x0)) * innerW;
+  const py = (v) => T + innerH - (v / yMax) * innerH;
+
+  const points = weekly.map((w) => `${px(ms(w.date)).toFixed(1)},${py(w.mean).toFixed(1)}`).join(' ');
+
+  const yTicks = [];
+  for (let v = 0; v <= yMax; v += 5e6) yTicks.push(v);
+  const grid = yTicks.map((v) => `<path d="M${L} ${py(v).toFixed(1)}H${W - R}"/>`).join('');
+  const yLabels = yTicks
+    .map(
+      (v) =>
+        `<text x="${L - 6}" y="${(py(v) + 3).toFixed(1)}" text-anchor="end">${v === 0 ? '0' : `${v / 1e6}M`}</text>`,
+    )
+    .join('');
+
+  const xTicks = [];
+  for (let y = new Date(x0).getUTCFullYear(); y <= new Date(x1).getUTCFullYear(); y++) {
+    for (const m of [0, 6]) {
+      const t = Date.UTC(y, m, 1);
+      if (t >= x0 && t <= x1) xTicks.push({ t, label: `${m === 0 ? 'JAN' : 'JUL'} ${y}` });
+    }
+  }
+  const xMarks = xTicks.map(({ t }) => `<path d="M${px(t).toFixed(1)} ${T + innerH}v4"/>`).join('');
+  const xLabels = xTicks
+    .map(({ t, label }) => `<text x="${px(t).toFixed(1)}" y="${H - 10}" text-anchor="middle">${label}</text>`)
+    .join('');
+
+  return [
+    `<svg viewBox="0 0 690 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Impressions settled per day on the Alkimi ad exchange, weekly means, January 2024 to ${endLabel}">`,
+    `  <g fill="none" stroke="#6A665B" stroke-width="0.5">${grid}${xMarks}</g>`,
+    `  <g fill="#6A665B" font-family="Archivo, sans-serif" font-size="8.5" letter-spacing="0.4">${yLabels}${xLabels}</g>`,
+    `  <polyline fill="none" stroke="#0057A8" stroke-width="1.5" points="${points}"/>`,
+    `</svg>`,
+    ``,
+  ].join('\n');
+}

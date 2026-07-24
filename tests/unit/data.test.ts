@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SERIES_START, windows, downsampleWeekly, summarize } from '../../scripts/data.mjs';
+import { SERIES_START, windows, downsampleWeekly, summarize, monthYear, renderChartSvg } from '../../scripts/data.mjs';
 
 const day = (date: string, imprCount: number) => ({ date, imprCount });
 
@@ -68,5 +68,48 @@ describe('summarize', () => {
       trailing7DayMeanImpressions: 2_000_000,
       display: '2.0 million',
     });
+  });
+});
+
+describe('monthYear', () => {
+  it('formats an ISO date as Month YYYY in UTC', () => {
+    expect(monthYear('2026-07-24')).toBe('July 2026');
+    expect(monthYear('2024-01-01')).toBe('January 2024');
+  });
+});
+
+describe('renderChartSvg', () => {
+  // Two years of weekly points ramping 100k → ~9.1M, like the real series.
+  const weekly = Array.from({ length: 130 }, (_, i) => ({
+    date: new Date(Date.UTC(2024, 0, 1) + i * 7 * 86_400_000).toISOString().slice(0, 10),
+    mean: 100_000 + Math.round((i / 129) * 9_000_000),
+  }));
+  const svg = renderChartSvg(weekly, { monthYear: 'July 2026' });
+
+  it('uses the pinned viewBox and is described for screen readers', () => {
+    expect(svg).toContain('viewBox="0 0 690 220"');
+    expect(svg).toContain('role="img"');
+    expect(svg).toMatch(/aria-label="[^"]*January 2024 to July 2026[^"]*"/);
+  });
+
+  it('draws one spot-ink polyline with one point per week', () => {
+    const points = svg.match(/<polyline[^>]*points="([^"]*)"/)?.[1] ?? '';
+    expect(points.split(' ')).toHaveLength(130);
+    expect(svg).toMatch(/<polyline[^>]*stroke="#0057A8"[^>]*stroke-width="1.5"/);
+  });
+
+  it('labels the y axis in compact millions up to a 5M-rounded max', () => {
+    expect(svg).toContain('>10M<');
+    expect(svg).toContain('>5M<');
+    expect(svg).toContain('>0<');
+  });
+
+  it('ticks the x axis at January and July boundaries', () => {
+    expect(svg).toContain('JAN 2025');
+    expect(svg).toContain('JUL 2025');
+  });
+
+  it('stays well under the 5 KB page-weight budget', () => {
+    expect(Buffer.byteLength(svg)).toBeLessThan(5000);
   });
 });
