@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { seoMeta } from '@/lib/seo';
 
 export const metadata: Metadata = {
@@ -22,8 +23,15 @@ export default function ProcessPage() {
         design system (DESIGN.md), and its implementation spec (specs/site-v1.md) are real
         files in the repo, written before the code, and every quality gate in them maps to a
         named test that runs in CI. Where the build taught the spec something, the spec carries
-        a dated amendment instead of a silent rewrite.{' '}
-        <span className="todo">[TODO: Dani — public repo link]</span>
+        a dated amendment instead of a silent rewrite. The repo is public:{' '}
+        <Link
+          href="https://github.com/danielcalvolopez/portfolio"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          github.com/danielcalvolopez/portfolio
+        </Link>
+        .
       </p>
 
       <h2>Tests before implementation</h2>
