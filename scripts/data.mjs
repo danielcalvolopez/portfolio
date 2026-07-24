@@ -3,6 +3,9 @@
 // `npm run data`; deliberately NOT part of `npm run build` — the site ships
 // the committed snapshot and never depends on the API being up.
 import { z } from 'zod';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const SERIES_START = '2024-01-01';
 
@@ -160,4 +163,27 @@ export async function fetchSeries(today, fetchImpl = fetch, sleep = defaultSleep
     series.push(...(await fetchWindow(win, fetchImpl, sleep)));
   }
   return series;
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const root = process.cwd();
+  const retrieved = new Date().toISOString().slice(0, 10);
+  const series = await fetchSeries(retrieved);
+  if (series.length === 0) throw new Error('alkimi api returned an empty series');
+  const summary = summarize(series);
+  const label = monthYear(series[series.length - 1].date);
+  const svg = renderChartSvg(downsampleWeekly(series), { monthYear: label });
+  const mdxPath = path.join(root, 'content', 'work', 'alkimi-labs.mdx');
+  const stamped = stampMdx(fs.readFileSync(mdxPath, 'utf8'), { display: summary.display, monthYear: label, retrieved });
+  // Everything computed and validated; only now touch the tree (all-or-nothing).
+  fs.mkdirSync(path.join(root, 'content', 'data'), { recursive: true });
+  fs.writeFileSync(
+    path.join(root, 'content', 'data', 'alkimi-metrics.json'),
+    JSON.stringify({ retrieved, series, summary }, null, 2) + '\n',
+  );
+  fs.writeFileSync(path.join(root, 'public', 'figs', 'alkimi-throughput.svg'), svg);
+  fs.writeFileSync(mdxPath, stamped);
+  console.log(
+    `alkimi data: ${series.length} days through ${series[series.length - 1].date}; stat "${summary.display}"`,
+  );
 }

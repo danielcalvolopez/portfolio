@@ -16,7 +16,7 @@ order: 2
 
 ## Context
 
-Alkimi Labs is the staking platform for the ALKIMI token. Users connect a Sui wallet, stake into a live pool, claim rewards, and follow the token unlock schedule; an explorer surfaces the ad exchange's auction activity alongside. It is a team product, and a live one: real balances move through it every day.
+Alkimi Labs is the staking platform for the ALKIMI token. Users connect a Sui wallet, stake into a live pool, claim rewards, and follow the token unlock schedule; an explorer surfaces the ad exchange's auction activity alongside — {/*data:impr*/}around 8.9 million impressions settled per day as of July 2026{/*data:end*/}. It is a team product, and a live one: real balances move through it every day.
 
 This case study stays close to the features I know from the inside: the Sui transaction layer for staking, unstaking, and claiming, the staking enrollment surface, the rewards chart data, the tokenomics model behind the unlock page, and the flow that migrates an Ethereum account to Sui. None of it is solo work. I built these with the frontend team, and the wider platform belongs to the whole team.
 
@@ -41,6 +41,8 @@ Precision is the second constraint. ALKIMI carries nine decimals, so any float a
 ## What shipped
 
 The platform is live at labs.alkimi.org, with public documentation at docs.alkimi.org. The features I worked on include the staking pool surface with its gating and validation, on-chain Merkle claims, the auto-stake toggle, rewards history with CSV export, the token unlock visualization, and the dual-signature migration form.
+
+<Fig n="2" caption="Impressions settled per day across the exchange, weekly means, January 2024 to July 2026. Source: Alkimi community data API (docs.alkimi.org), retrieved 2026-07-24. Linework prints in the spot ink." src="/figs/alkimi-throughput.svg" alt="Line chart of impressions settled per day, rising from tens of thousands in early 2024 to millions by mid-2026" w="690" h="220" />
 
 The test suite runs about 515 cases across 19 files, and the staking hook is tested against mocked RPC failure modes, including each tier of the coin-fetch fallback. Coverage runs on every pull request in CI.
 
