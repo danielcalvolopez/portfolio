@@ -11,25 +11,32 @@ export default function AboutPage() {
     <article>
       <section className="masthead">
         <h1>About</h1>
-        <p className="label">Background · stack · contact</p>
+        <p className="label">Background · contact</p>
       </section>
 
       <p>
-        <span className="todo">
-          [TODO: Dani — two short paragraphs: the platform engineering background, and the
-          music production years and why they explain the taste and the systems thinking]
-        </span>
+        I&rsquo;m a front-end engineer at Alkimi. That&rsquo;s still the work I know best, and I
+        care a lot about how a product feels to use: how fast it loads, how the small interactions
+        land, whether it holds up under real traffic.
       </p>
 
-      <h2>Stack</h2>
-      <p className="index-terms">
-        TypeScript · React · Next.js · Node · Postgres · Supabase · Stripe ·{' '}
-        <span className="todo">[TODO: Dani — confirm]</span>
-      </p>
-
-      <h2>Looking for</h2>
       <p>
-        <span className="todo">[TODO: Dani — one honest paragraph]</span>
+        What&rsquo;s changed over the last year is how much of the product I own. I&rsquo;m not just
+        building screens anymore. I take things from a rough idea through to something shipped, and a
+        lot of that now runs through AI.
+      </p>
+
+      <p>
+        I work with coding agents every day. Most of the value is in how you drive them. I lean on
+        spec-driven development, run subagents to review the plans and the code in parallel, and
+        build up reusable skills so the agents stay consistent across a codebase. A lot of my job
+        now is making that workflow good for the whole team, not just for me.
+      </p>
+
+      <p>
+        I&rsquo;ve always liked that the web never sits still. The thing I find most interesting
+        right now is what a single engineer can build once AI is part of the setup, and getting good
+        at that is most of what I think about.
       </p>
 
       <h2>Correspondence</h2>
@@ -38,14 +45,15 @@ export default function AboutPage() {
           <a href="https://x.com/danicalvo89">x.com/danicalvo89</a>
         </li>
         <li>
-          <span className="todo">[TODO: Dani — GitHub URL]</span>
+          <a href="https://github.com/danielcalvolopez">github.com/danielcalvolopez</a>
         </li>
         <li>
-          <span className="todo">[TODO: Dani — LinkedIn URL]</span>
+          <a href="https://www.linkedin.com/in/daniel-calvo-lopez-97607187/">
+            linkedin.com/in/daniel-calvo-lopez
+          </a>
         </li>
         <li>
-          <a href="mailto:acidistrict@gmail.com">acidistrict@gmail.com</a>{' '}
-          <span className="todo">[TODO: Dani — confirm public email]</span>
+          <a href="mailto:acidistrict@gmail.com">acidistrict@gmail.com</a>
         </li>
       </ul>
     </article>

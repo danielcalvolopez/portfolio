@@ -1,12 +1,12 @@
 ---
 title: "Live staking at Alkimi Labs, where mistakes cost money"
 slug: alkimi-labs
-role: "Platform engineer — feature owner, ongoing collaboration"
-period: "[TODO: Dani — start year] — present"
-stack: ["[TODO: Dani — confirm public stack]"]
+role: "Frontend engineer — feature owner, ongoing collaboration"
+period: "2024 — present"
+stack: [Next.js, TypeScript, React Query, Sui, wagmi/viem]
 summary: "A live staking platform where real funds move: on-chain state in the UI, reliability as the feature."
-abstract: "Alkimi Labs is a live web3 platform where users stake tokens, claim rewards, and manage on-chain positions. I work on the platform in heavy, ongoing collaboration with the team: staking flows, reward claiming, wallet interactions, and the public docs. This case study covers what correctness means in a UI where mistakes cost real money."
-indexTerms: [staking, on-chain state, reward claiming, wallet UX, reliability]
+abstract: "Alkimi Labs is the live staking platform for the ALKIMI token on Sui: users stake into a pool, claim rewards proved by Merkle proofs, and manage on-chain positions. I work on it as a frontend engineer in heavy, ongoing collaboration with the team; the staking transaction layer, the enrollment surface, and the account migration flow are mine. This case study covers what correctness means in a UI where a wrong number is someone's money."
+indexTerms: [Sui, staking, Merkle proofs, optimistic UI, token precision]
 links:
   - { label: labs.alkimi.org, url: "https://labs.alkimi.org" }
   - { label: docs.alkimi.org, url: "https://docs.alkimi.org" }
@@ -16,24 +16,66 @@ order: 2
 
 ## Context
 
-[TODO: Dani — slice 5; internal metrics anonymised per SPEC confidentiality rules]
+Alkimi Labs is the staking platform for the ALKIMI token. Users connect a Sui wallet, stake into a live pool, claim rewards, and follow the token unlock schedule; an explorer surfaces the ad exchange's auction activity alongside. It is a team product, and a live one: real balances move through it every day.
+
+This case study stays inside my scope. The Sui transaction layer for staking, unstaking, and claiming is mine, along with the staking enrollment surface, the rewards chart data, the tokenomics model behind the unlock page, and the flow that migrates an Ethereum account to Sui. The rest of the platform is the team's work, which I build on and with.
 
 ## Problem & constraints
 
-[TODO: Dani]
+The central problem of this UI is that it renders other people's money, read from systems that briefly disagree. The chain is the truth; the indexer the backend reads from lags it by seconds; the user expects the number to change the moment their wallet closes. Showing stale balances reads as broken. Showing invented ones is worse than broken.
+
+Precision is the second constraint. ALKIMI carries nine decimals, so any float arithmetic in the wrong place mints or destroys dust. The third is that every write is gated: wallet linked, KYC passed, terms accepted, minimums met. The enrollment surface has to tell the truth about which gate the user is standing in front of, in the right order, before a transaction is ever built.
 
 ## Architecture & decisions
 
-[TODO: Dani]
+**Optimistic truth with scheduled reconciliation.** When a claim succeeds, the UI zeroes the claimable amount in the query cache immediately; a new stake prepends a provisional row. Eight seconds later, a revalidation pass refetches from the indexer and replaces the provisional state with recorded state. The trade-off is a short window where the interface is ahead of the records. I accepted it because the alternative, numbers frozen for seconds after the wallet closes, teaches users not to trust the page. The eight-second constant is honest about the indexer rather than elegant.
+
+**Plan for the RPC to be wrong.** Building a stake transaction requires the wallet's coin objects, and under load the node's index sometimes reports a funded wallet as empty. The stake path degrades through three tiers: a paginated coin query, cross-checked against the wallet's reported balance; a full coin scan filtered client-side; and finally a raw object query by type. More code paths, and each one needs its own tests against mocked failures, but a wallet with funds must never be told it has none.
+
+**Floats never touch money.** Base units live as BigInt and are formatted to strings by hand; transfer amounts pass through a decimal library that rounds down, always down, to nine places; the input field refuses anything past the ninth decimal before validation even runs. On the claim path, every Merkle proof element is checked to be exactly 32 bytes before serialization, so a malformed proof fails in the client instead of on chain.
+
+<Fig n="1" caption="The claim path. The interface answers first; the indexer confirms eight seconds later. Linework prints in the spot ink.">
+  <svg viewBox="0 0 690 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reward claim flow diagram">
+    <g fill="none" stroke="#0057A8" stroke-width="1.5">
+      <rect x="4" y="54" width="118" height="42"/>
+      <rect x="152" y="54" width="104" height="42"/>
+      <rect x="284" y="54" width="110" height="42"/>
+      <rect x="424" y="54" width="116" height="42"/>
+      <rect x="570" y="54" width="116" height="42"/>
+      <path d="M122 75h30m-8 -5 8 5-8 5"/>
+      <path d="M254 75h30m-8 -5 8 5-8 5"/>
+      <path d="M394 75h30m-8 -5 8 5-8 5"/>
+      <path d="M540 75h30m-8 -5 8 5-8 5"/>
+    </g>
+    <g fill="#1B1915" font-family="Archivo, sans-serif" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle">
+      <text x="63" y="79">CLAIM</text>
+      <text x="204" y="79">PROOF CHECK</text>
+      <text x="339" y="79">WALLET SIGNS</text>
+      <text x="482" y="79">OPTIMISTIC UI</text>
+      <text x="628" y="79">RECONCILE</text>
+    </g>
+    <g fill="#6A665B" font-family="Archivo, sans-serif" font-size="8.5" letter-spacing="0.4" text-anchor="middle">
+      <text x="204" y="114">32 BYTES PER NODE</text>
+      <text x="482" y="114">CLAIMABLE TO ZERO</text>
+      <text x="628" y="114">+8S · INDEXER</text>
+    </g>
+  </svg>
+</Fig>
+
+**Prove ownership twice.** The Ethereum-to-Sui account migration builds one canonical message, stamped with a timestamp and a nonce, and requires a signature from both wallets before the request can be submitted. Two wallets connected in one session is real friction, and the form spends most of its code explaining which of the four connect-and-sign states the user is in. I accepted the friction because the alternative is support tickets about asset linkage, and those are settled by proof, not by sympathy.
 
 ## What shipped
 
-[TODO: Dani — public-site references only]
+The platform is live at labs.alkimi.org, with public documentation at docs.alkimi.org. Within my scope: the staking pool surface with its gating and validation, on-chain Merkle claims, the auto-stake toggle, rewards history with CSV export, the token unlock visualization, and the dual-signature migration form.
+
+The test suite runs about 515 cases across 19 files, and the staking hook is tested against mocked RPC failure modes, including each tier of the coin-fetch fallback. Coverage runs on every pull request in CI.
+
+[TODO: Dani — anonymised usage or reliability numbers, if any are cleared for publication]
 
 ## What I'd do differently
 
 <Warning>
 
-[TODO: Dani]
+The transaction layer keeps a proper state machine, and then the buttons mostly ignore it: in-flight guarding leans on the wallet's own modal instead of the interface disabling itself, which works until a wallet is slow to open. The eight-second reconciliation delay was tuned by watching the indexer, not by measuring it, and a constant chosen by feel deserves to be replaced by an event. And a pending transaction does not survive a page reload; the toast is the only witness. None of these has cost a user money. All three are the kind of debt that waits.
 
 </Warning>

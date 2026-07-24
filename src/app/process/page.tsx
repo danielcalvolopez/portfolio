@@ -34,7 +34,7 @@ export default function ProcessPage() {
 
       <h2>AI as leverage</h2>
       <p>
-        I work with Claude Code inside that discipline: the spec constrains the model, the
+        I work with multiple AI models inside that discipline: the spec constrains the model, the
         tests judge it, and subagent review passes critique the output against the design
         system before anything merges. The model types faster than I do. What ships is still
         my call.
@@ -42,10 +42,28 @@ export default function ProcessPage() {
 
       <h2>A worked example</h2>
       <p>
-        <span className="todo">
-          [TODO: Dani — RetryFi dunning schedule: spec excerpt, the failing test, the
-          production diff, and the metric it moved]
-        </span>
+        The clearest one is RetryFi&rsquo;s decline handling. The spec fixed the schedule before any
+        code: soft declines earn four retries, at <code>+4h · +72h · +96h · +168h</code>; hard
+        declines, a stolen or expired card, skip the ladder and go straight to the dunning emails;
+        an unknown decline code is treated as soft. Two constraints sat next to it. The waits span
+        days and the infrastructure keeps no process alive between them, so a retry has to survive a
+        deploy; and the same failed invoice can arrive twice, once from the webhook and once from the
+        reconcile scan, so a second charge is a money bug, not an edge case.
+      </p>
+      <p>
+        The first thing I wrote was the test. A stolen card must schedule zero retries and land in
+        the email sequence; the same invoice, delivered twice in one tick, must produce one charge,
+        not two. I watched both fail before the classifier and the idempotency key existed. Only then
+        did the implementation follow: one constants file for the schedule, a hard-decline set the
+        classifier checks first, an Inngest <code>step.sleep</code> so the multi-day waits resume
+        across deploys, and a retry key of <code>{'retry-{invoice}-{attempt}'}</code> that turns a
+        double fire into a no-op.
+      </p>
+      <p>
+        The production diff was small, a few functions, and it merged only after the tests it was
+        written against passed and a subagent review pass had checked it against the spec. What the
+        suite locks in is the boring kind of correctness: a card that can never succeed is never
+        retried, an invoice is never charged twice, and a wait that spans days survives a redeploy.
       </p>
     </article>
   );

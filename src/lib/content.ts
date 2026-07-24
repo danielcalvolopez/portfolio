@@ -27,6 +27,7 @@ export const SecondaryEntrySchema = z.object({
   role: z.string().min(1),
   period: z.string().min(1),
   line: z.string().min(1).max(160),
+  url: z.url().optional(),
 });
 
 export type SecondaryEntry = z.infer<typeof SecondaryEntrySchema>;
