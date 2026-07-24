@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildLlmsTxt, buildLlmsFullTxt } from '@/lib/llms';
+import { buildLlmsTxt, buildLlmsFullTxt, mdxToMarkdown } from '@/lib/llms';
 import { canonicalFor } from '@/lib/seo';
 import { loadCaseStudies } from '@/lib/content';
 import { GET as getLlms } from '@/app/llms.txt/route';
@@ -78,5 +78,13 @@ describe.skipIf(!fs.existsSync(OUT_DIR))('U10: exported artifacts', () => {
   it('the export contains llms.txt and llms-full.txt matching the builders', () => {
     expect(fs.readFileSync(path.join(OUT_DIR, 'llms.txt'), 'utf8')).toBe(buildLlmsTxt());
     expect(fs.readFileSync(path.join(OUT_DIR, 'llms-full.txt'), 'utf8')).toBe(buildLlmsFullTxt());
+  });
+});
+
+describe('mdxToMarkdown: MDX comments', () => {
+  it('strips {/* */} comments, keeping surrounding prose intact', () => {
+    expect(
+      mdxToMarkdown('alongside — {/*data:impr*/}around 8.8 million impressions{/*data:end*/}. It is'),
+    ).toBe('alongside — around 8.8 million impressions. It is');
   });
 });

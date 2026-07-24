@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dani Calvo — Ops Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12100D;
+    --text: #E8E3D9;
+    --amber: #FFB000;
+    --dim: #8C8577;
+    --rule: #2C2822;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Martian Mono", monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--text); text-decoration: none; }
+  a:hover { color: var(--amber); }
+
+  .frame { max-width: 1080px; margin: 0 auto; padding: 0 32px 56px; }
+
+  /* Top status bar */
+  .statusbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .statusbar .live { color: var(--amber); }
+
+  /* Identity block */
+  .ident { padding: 64px 0 40px; border-bottom: 1px solid var(--rule); }
+  .ident h1 {
+    font-size: 58px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .ident .role {
+    margin-top: 16px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .ident .role b { color: var(--amber); font-weight: 500; }
+
+  /* Section labels */
+  .sect { padding: 36px 0; border-bottom: 1px solid var(--rule); }
+  .sect-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 20px;
+  }
+  .sect-label::before { content: "// "; color: var(--dim); }
+
+  /* Brief */
+  .brief p { max-width: 68ch; font-weight: 300; font-size: 13.5px; color: var(--text); }
+  .brief a { color: var(--amber); border-bottom: 1px solid var(--rule); }
+  .brief a:hover { border-bottom-color: var(--amber); }
+  .brief .terms { margin-top: 20px; font-size: 11px; color: var(--dim); letter-spacing: 0.04em; }
+  .brief .terms b { color: var(--text); font-weight: 500; }
+
+  /* Systems board */
+  .board { width: 100%; border-collapse: collapse; }
+  .board th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding: 0 20px 12px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .board td {
+    padding: 20px 20px 20px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .board tr:last-child td { border-bottom: none; }
+  .board .id { color: var(--dim); font-size: 11.5px; white-space: nowrap; }
+  .board .sys a { font-weight: 500; font-size: 14px; letter-spacing: -0.01em; }
+  .board .sys a:hover { border-bottom: 1px solid var(--amber); }
+  .board .sys .desc { margin-top: 6px; font-size: 11.5px; font-weight: 300; color: var(--dim); max-width: 46ch; }
+  .board .meta { font-size: 11px; color: var(--dim); white-space: nowrap; line-height: 1.9; }
+  .status { font-size: 10.5px; letter-spacing: 0.14em; white-space: nowrap; }
+  .status::before { content: "● "; font-size: 8px; vertical-align: 1px; }
+  .status.live { color: var(--amber); }
+  .status.done { color: var(--dim); }
+
+  /* Appendix + footer */
+  .appendix a { color: var(--text); border-bottom: 1px solid var(--rule); font-size: 13px; }
+  .appendix a:hover { color: var(--amber); border-bottom-color: var(--amber); }
+  footer {
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  @media (max-width: 860px) {
+    .ident h1 { font-size: 36px; }
+    .board .desc, .board th:nth-child(4), .board td:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <header class="statusbar">
+    <span>DANI CALVO / OPERATIONS</span>
+    <span>DOC: HOME/LANDING</span>
+    <span class="live">SYSTEMS NOMINAL</span>
+    <span>2026-07-24 UTC</span>
+  </header>
+
+  <section class="ident">
+    <h1>Dani<br>Calvo</h1>
+    <p class="role">Software engineer — platforms, <b>end to end</b></p>
+  </section>
+
+  <section class="sect brief" aria-label="Brief">
+    <p class="sect-label">Brief</p>
+    <p>I build platforms end to end: spec-first, test-first, with AI as engineering
+    leverage. I&rsquo;m a front-end engineer at <a href="https://alkimi.org">Alkimi</a>,
+    where we&rsquo;re pioneering a new way to run programmatic advertising and building
+    the industry standards to carry it. On my own time I shipped RetryFi, a
+    payment-recovery SaaS, alone from architecture to launch.</p>
+    <p class="terms"><b>INDEX</b>: agentic engineering / web3 platforms / SaaS / Next.js / test-driven development</p>
+  </section>
+
+  <section class="sect" aria-label="Systems">
+    <p class="sect-label">Monitored systems</p>
+    <table class="board">
+      <thead>
+        <tr><th>ID</th><th>System</th><th>Role</th><th>Period</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="id">RF-01</td>
+          <td class="sys">
+            <a href="#">RetryFi — a dunning engine owned end to end</a>
+            <p class="desc">Stripe failed-payment recovery SaaS. Idea, architecture, production, launch.</p>
+          </td>
+          <td class="meta">Solo founder<br>full stack + infra + GTM</td>
+          <td class="meta">2026 — present</td>
+          <td><span class="status live">LIVE</span></td>
+        </tr>
+        <tr>
+          <td class="id">AL-02</td>
+          <td class="sys">
+            <a href="#">Alkimi Labs — live staking, where mistakes cost money</a>
+            <p class="desc">On-chain state in the UI. Reliability as the feature; a wrong number is someone&rsquo;s money.</p>
+          </td>
+          <td class="meta">Frontend engineer<br>ongoing collaboration</td>
+          <td class="meta">2023 — present</td>
+          <td><span class="status live">LIVE</span></td>
+        </tr>
+        <tr>
+          <td class="id">CL-03</td>
+          <td class="sys">
+            <a href="#">CrediLabs — the frontend, conception to production</a>
+            <p class="desc">On-chain platform frontend, owned end to end inside a cross-functional team.</p>
+          </td>
+          <td class="meta">Frontend owner<br>architecture + implementation</td>
+          <td class="meta">2024 — 2025</td>
+          <td><span class="status done">DELIVERED</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="sect appendix" aria-label="Procedure">
+    <p class="sect-label">Procedure</p>
+    <a href="#">How I build: spec to tests to production &rarr;</a>
+  </section>
+
+  <footer>
+    <span>BUILD A1B2C3D · 14.2 KB · LH 100/100/100/100</span>
+    <span>STATIC RENDER — NO CLIENT JS</span>
+  </footer>
+
+</div>
+</body>
+</html>

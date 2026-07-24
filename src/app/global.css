@@ -6,6 +6,7 @@
 
 html {
   font-size: 106.25%; /* 17px */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -100,7 +101,7 @@ p {
   text-decoration: none;
 }
 .running-head a:hover,
-.running-head a[aria-current='page'] {
+.running-head a[aria-current="page"] {
   text-decoration: underline;
   text-decoration-thickness: 1px;
 }
@@ -294,7 +295,7 @@ th {
 td {
   padding: 0.45rem 0.75rem 0.45rem 0;
   border-bottom: 1px solid var(--rule);
-  font-feature-settings: 'tnum';
+  font-feature-settings: "tnum";
 }
 tr:last-child td {
   border-bottom: none;

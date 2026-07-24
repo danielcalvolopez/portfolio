@@ -8,7 +8,7 @@ Built with [Next.js](https://nextjs.org) 16 + React 19, case studies written in 
 
 ```bash
 npm install
-npm run dev      # http://localhost:3005
+npm run dev      # http://localhost:3000
 ```
 
 ## Other buttons you can press
