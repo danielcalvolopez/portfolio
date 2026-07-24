@@ -29,34 +29,7 @@ The second constraint was the team seam. The backend belonged to other engineers
 
 **One choke point for the backend, with trust priced in.** Every call to the partner API went through a single typed fetch wrapper that injected auth, attached cache tags, normalized errors (including expired sessions and non-JSON bodies), and returned one envelope shape to every caller. Validation was two-tier, matched to ownership: the routes over my own database validated every request at runtime with schemas derived from the table definitions, while the partner boundary was typed at compile time and its changes negotiated by ticket. That split kept the team fast; its cost shows up below.
 
-<Fig n="1" caption="Three sources of truth, one envelope. The interface never met a raw response. Linework prints in the spot ink.">
-  <svg viewBox="0 0 690 224" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Frontend boundary diagram">
-    <g fill="none" stroke="#0057A8" stroke-width="1.5">
-      <rect x="44" y="8" width="180" height="40"/>
-      <rect x="255" y="8" width="180" height="40"/>
-      <rect x="466" y="8" width="180" height="40"/>
-      <rect x="195" y="96" width="300" height="40"/>
-      <rect x="265" y="176" width="160" height="40"/>
-      <path d="M134 48v12h121v36m-5 -8 5 8 5-8"/>
-      <path d="M345 48v48m-5 -8 5 8 5-8"/>
-      <path d="M556 48v12h-121v36m-5 -8 5 8 5-8"/>
-      <path d="M345 136v40m-5 -8 5 8 5-8"/>
-    </g>
-    <g fill="#1B1915" font-family="Archivo, sans-serif" font-size="10" font-weight="600" letter-spacing="0.5" text-anchor="middle">
-      <text x="134" y="24">PARTNER API</text>
-      <text x="345" y="24">OWN POSTGRES</text>
-      <text x="556" y="24">CHAIN</text>
-      <text x="345" y="113">ONE NORMALIZED ENVELOPE</text>
-      <text x="345" y="200">THE INTERFACE</text>
-    </g>
-    <g fill="#6A665B" font-family="Archivo, sans-serif" font-size="8.5" letter-spacing="0.4" text-anchor="middle">
-      <text x="134" y="38">TYPED · TICKETED</text>
-      <text x="345" y="38">SCHEMA-VALIDATED</text>
-      <text x="556" y="38">WAGMI · PER BLOCK</text>
-      <text x="345" y="127">DATA · ERROR · SUCCESS · STATUS</text>
-    </g>
-  </svg>
-</Fig>
+<Fig n="1" caption="Three sources of truth, one envelope. The interface never met a raw response. Linework prints in the spot ink." src="/figs/credilabs-boundary.svg" alt="Frontend boundary diagram" w="690" h="224" />
 
 **Cache tags as the reconciliation vocabulary.** Server reads carried named cache tags; mutations busted them; and after an on-chain transaction confirmed, the success handler revalidated the tags and refreshed the route so the server-rendered state caught up with the chain. Balances refetched on every new block. The choreography meant post-transaction truth arrived without a manual refresh, at the cost of naming and maintaining that tag vocabulary as carefully as an API.
 

@@ -254,7 +254,8 @@ figure {
     margin-inline: -5rem;
   }
 }
-figure svg {
+figure svg,
+figure img {
   width: 100%;
   height: auto;
   display: block;

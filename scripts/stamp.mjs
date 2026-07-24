@@ -46,7 +46,7 @@ export function stampHtml(html, kb) {
 function localAssets(html, outDir) {
   const refs = new Set();
   // og images are fetched by scrapers, not by the page; they don't count.
-  for (const m of html.matchAll(/(?:href|src)="(\/_next\/[^"]+)"/g)) {
+  for (const m of html.matchAll(/(?:href|src)="(\/_next\/[^"]+|\/figs\/[^"]+)"/g)) {
     refs.add(m[1].split('?')[0]);
   }
   // fonts referenced from inlined CSS

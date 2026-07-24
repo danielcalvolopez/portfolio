@@ -47,18 +47,30 @@ export function Note({ children }: { children?: React.ReactNode }) {
   );
 }
 
+/* Diagrams live as standalone files in /public/figs and are referenced via
+   src. Inline SVG in MDX is fragile: format-on-save reflows <text> content
+   onto its own line, MDX parses that as a markdown paragraph, and a <p>
+   inside an SVG <text> renders as nothing. */
 export function Fig({
   n,
   caption,
+  src,
+  alt,
+  w,
+  h,
   children,
 }: {
   n: number | string;
   caption: string;
+  src?: string;
+  alt?: string;
+  w?: number | string;
+  h?: number | string;
   children?: React.ReactNode;
 }) {
   return (
     <figure>
-      {children}
+      {src ? <img src={src} alt={alt ?? caption} width={w} height={h} /> : children}
       <figcaption>
         <span className="label">Fig. {n}</span>
         {caption}
