@@ -17,9 +17,11 @@ export default function ProcessPage() {
       <h2>Spec first</h2>
       <p>
         Every feature starts as a written spec: what exists, what is out of scope, and how
-        success is measured. This site is the worked example. Its product spec, design system,
-        and implementation spec are real documents in the repo, written and reviewed before any
-        code, and every quality gate in them maps to a named test.{' '}
+        success is measured. This site is the worked example. Its product spec (SPEC.md), its
+        design system (DESIGN.md), and its implementation spec (specs/site-v1.md) are real
+        files in the repo, written before the code, and every quality gate in them maps to a
+        named test that runs in CI. Where the build taught the spec something, the spec carries
+        a dated amendment instead of a silent rewrite.{' '}
         <span className="todo">[TODO: Dani — public repo link]</span>
       </p>
 

@@ -22,6 +22,15 @@ for (const route of ROUTES) {
   });
 }
 
+for (const route of ROUTES) {
+  test(`E5 ${route}: nothing animates under prefers-reduced-motion`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(route);
+    const running = await page.evaluate(() => document.getAnimations().length);
+    expect(running).toBe(0);
+  });
+}
+
 test('E6: skip link is the first tabbable element and focus is visible', async ({ page }) => {
   await page.goto('/');
   await page.keyboard.press('Tab');

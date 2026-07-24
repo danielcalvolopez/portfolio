@@ -10,7 +10,7 @@ This file encodes taste decisions. Follow it exactly. Where it leaves an axis fr
 
 - **Charis SIL** (OFL; the SIL-maintained descendant of Bitstream Charter, the 1987 laser-printer face of technical memos) carries everything: body at 17px, and headings set bold and tight in the text face, as period journals did. Self-hosted, subset.
 - **Archivo** (OFL) appears only as small uppercase labels: running heads, index terms, figure/table labels, table headers, the footer line. Never at display sizes.
-- No mono anywhere, including the build-hash footer. A monospace "dev accent" is the median move on engineer portfolios; the journal register is stronger without it.
+- No mono anywhere, including the build-hash footer. A monospace "dev accent" is the median move on engineer portfolios; the journal register is stronger without it. Inline code and identifiers in prose render in small Archivo, never the browser's Courier fallback.
 
 **Tokens (6, defined once as CSS variables):**
 

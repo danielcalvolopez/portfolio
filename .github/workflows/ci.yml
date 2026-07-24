@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # E3 visual baselines are per-platform; Linux baselines pending, so
+      # visual runs locally and CI runs everything else (site-v1.md §5).
+      - name: Build + e2e gates (smoke, a11y, reduced motion, no third parties)
+        run: npx playwright test --grep-invert visual
+      - name: Unit gates (schema, register, confidentiality scan of the export)
+        run: npm run test
+      - name: Lighthouse gate, mobile Fast 3G
+        run: npx lhci autorun
+      - name: Lighthouse gate, desktop
+        run: npx lhci autorun --config=lighthouserc-desktop.json

@@ -35,12 +35,14 @@ test('home: contents list links every featured case study and the process page',
   await expect(contents.locator('a[href*="/process"]')).toHaveCount(1);
 });
 
-test('E4 (partial): zero third-party requests on home', async ({ page }) => {
-  const external: string[] = [];
-  page.on('request', (r) => {
-    if (!r.url().startsWith('http://localhost:3006')) external.push(r.url());
+for (const route of ROUTES) {
+  test(`E4 ${route}: zero third-party requests`, async ({ page }) => {
+    const external: string[] = [];
+    page.on('request', (r) => {
+      if (!r.url().startsWith('http://localhost:3006')) external.push(r.url());
+    });
+    await page.goto(route, { waitUntil: 'load' });
+    await page.waitForTimeout(1000);
+    expect(external).toEqual([]);
   });
-  await page.goto('/', { waitUntil: 'load' });
-  await page.waitForTimeout(1500);
-  expect(external).toEqual([]);
-});
+}

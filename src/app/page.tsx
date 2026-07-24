@@ -15,7 +15,15 @@ export default function Home() {
         <span className="label">Abstract</span>
         <p>
           I build platforms end to end: spec-first, test-first, with AI as
-          engineering leverage. I&rsquo;m a frontend engineer at Alkimi, where
+          engineering leverage. I&rsquo;m a frontend engineer at{" "}
+          <Link
+            href="https://alkimi.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Alkimi
+          </Link>
+          , where
           we&rsquo;re pioneering a new way to run programmatic advertising and
           building the industry standards to carry it. On my own time I shipped
           RetryFi, a payment-recovery SaaS, alone from architecture to launch.

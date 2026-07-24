@@ -33,7 +33,7 @@ Audience: hiring managers and founders evaluating senior frontend/product engine
 
 ### Initial case studies (in order of prominence)
 
-1. **RetryFi** (retryfi.com) — solo-built Stripe failed-payment recovery SaaS. Stripe Connect (Standard OAuth, read-only scopes), Google OAuth production verification, Next.js/Supabase/Vercel, dunning logic, Product Hunt launch (June 2026). The full-ownership story: idea → architecture → production → GTM.
+1. **RetryFi** (retryfi.com) — solo-built Stripe failed-payment recovery SaaS. Stripe Connect OAuth (corrected 2026-07-24: Stripe gates read-only scopes, so the grant is `read_write` compensated by a restricted platform key — copy must never say "read-only"), Google OAuth production verification, Next.js/Supabase/Vercel, dunning logic, Product Hunt launch (June 2026). The full-ownership story: idea → architecture → production → GTM.
 2. **Alkimi Labs** (labs.alkimi.org) — live **web3 platform** where users stake tokens, claim rewards, and manage on-chain positions; heavy, ongoing collaboration on the platform plus the public docs (docs.alkimi.org). The "complex production platform inside a team" story: on-chain state in the UI (staking flows, reward claiming, wallet interactions), reliability and correctness where real funds are involved. Can reference the public site and docs freely; internal metrics anonymised.
 3. **CrediLabs** (credilabs.io) — client project at Alkimi (past engagement, no longer a client): a web3 on-chain platform built by a team; I was involved from conception and **owned the frontend end to end (architecture + implementation)**, working alongside dedicated backend, infra, and QA engineers. The "frontend owner inside a cross-functional team" story: on-chain constraints surfacing in the UI, frontend architecture decisions, collaboration contracts with backend (API/typing boundaries), production delivery. Copy must scope ownership to frontend explicitly — never imply full-platform ownership or visual/UX design credit. Write in past tense; do not imply ongoing involvement or an ongoing client relationship.
 
@@ -59,7 +59,7 @@ Audience: hiring managers and founders evaluating senior frontend/product engine
 - Content as MDX with a typed frontmatter schema (title, slug, role, period, stack, summary, featured).
 - Lighthouse 100/100/100/100 on every page, desktop and mobile. This is a hard requirement, and it gets stated on the site (small footer line: build hash + Lighthouse score + page weight).
 - LCP < 1.0s on Fast 3G for the home page. Fonts self-hosted, subset, `font-display: optional` (measured 2026-07-22: `swap` puts the webfont repaint at 1.5s and becomes the LCP, failing the line above; `optional` keeps the size-adjusted fallback on slow first visits and guarantees zero CLS), zero CLS.
-- OG images generated per page (reuse the existing OG-image skill/pipeline).
+- OG images generated per page at build (satori + resvg pipeline, `scripts/og.mjs`).
 - Accessible: keyboard navigable, visible focus states, `prefers-reduced-motion` respected, semantic HTML, AA contrast minimum.
 - Analytics: none, or a single privacy-friendly pixel. Nothing that costs performance.
 
