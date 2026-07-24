@@ -19,12 +19,14 @@ function tableToMarkdown(inner: string): string {
   ].join('\n');
 }
 
-/** Rewrite the MDX document grammar (<Fig>, <Data>, <Note>, <Warning>) as
-    plain Markdown. Captions survive; tags do not. */
+/** Rewrite the MDX document grammar (<Fig>, <Data>, <Note>, <Warning>,
+    {/* comments *\/}) as plain Markdown. Captions survive; tags and
+    comments do not. */
 export function mdxToMarkdown(body: string): string {
   const attr = (attrs: string, name: string) =>
     attrs.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1] ?? '';
   return body
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, '')
     .replace(/<Fig\b([\s\S]*?)\/>/g, (_m, attrs: string) => {
       return `Figure ${attr(attrs, 'n')}: ${attr(attrs, 'caption')}`;
     })
